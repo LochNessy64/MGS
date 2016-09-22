@@ -6,6 +6,12 @@
 AItem::AItem()
 {
 	bIsVisible = false;
+	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Mesh"));
+	RootComponent = ItemMesh;
+	Type = EItemType::Other;
+	bIsNameVisible = true;
+	bAreBulletsVisible = false;
+	bIsSelected = false;
 }
 
 EItemType AItem::GetItemType()

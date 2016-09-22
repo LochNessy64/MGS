@@ -21,21 +21,13 @@ class MGS_API AItem : public AWorldObject
 
 
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	EItemType Type;
-
-
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	bool bIsNameVisible;
-	bool bAreBulletsVisible;
-	bool bIsSelected;
+	
 	uint32 MaxCount;
 	uint32 CurrentCount;
 	FString ItemName;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent * ItemMesh;
+	class UStaticMeshComponent *ItemMesh;
 
 public:
 
@@ -53,9 +45,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Item Properties")
 		FString ToString();
 
+	FORCEINLINE class UStaticMeshComponent *GetMesh() const { return ItemMesh; }
 
 protected:
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	EItemType Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	bool bIsNameVisible;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	bool bAreBulletsVisible;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	bool bIsSelected;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", Meta = (AllowPrivateAccess = "true"))
 	bool bIsVisible;
 
