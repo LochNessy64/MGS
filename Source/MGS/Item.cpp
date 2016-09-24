@@ -5,6 +5,7 @@
 
 AItem::AItem()
 {
+	PrimaryActorTick.bCanEverTick = true;
 	bIsActive = false;
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Mesh"));
 	RootComponent = ItemMesh;
@@ -15,6 +16,23 @@ AItem::AItem()
 	ItemName = "ITEM NAME";
 
 	ItemFullMessage = ItemName + " FULL";
+
+	TurnRate = FRotator(0.0f, 0.0f, 180.0f);
+
+	//UE_LOG(LogTemp, Warning, TEXT("Can Ever Tick? : %s"), PrimaryActorTick.bCanEverTick ? TEXT("True") : TEXT("False"));
+}
+
+void AItem::BeginPlay()
+{
+	Super::BeginPlay();
+
+}
+
+void AItem::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	IdleAnimation(DeltaSeconds);
 }
 
 void AItem::Init(FString ItemName, EItemType TypeOfItem)
@@ -71,17 +89,21 @@ bool AItem::WasCollected()
 
 //TODO: Fill this out
 //this is called in WasCollected to check if inventory is full or not
-bool IsInventoryItemFull(UIItem *InvItem)
+bool AItem::IsInventoryItemFull(UIItem *InvItem)
 {
 	return false;
 }
 
-void IdleAnimation()
+void AItem::IdleAnimation(float DeltaSeconds)
 {
-
+	//UE_LOG(LogTemp, Warning, TEXT("In Idle Animation"));
+	
+	//AddActorLocalRotation(TurnRate * DeltaSeconds);
+	AddActorWorldRotation(TurnRate * DeltaSeconds);
+	UE_LOG(LogTemp, Warning, TEXT("DeltaSeconds %f "), DeltaSeconds);
 }
 
-void CantCollectAnimation()
+void AItem::CantCollectAnimation()
 {
 
 }

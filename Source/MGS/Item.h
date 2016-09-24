@@ -23,9 +23,12 @@ class MGS_API AItem : public AWorldObject
 private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	FRotator TurnRate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	FString ItemName;
 
-	static FString ItemFullMessage;
+	FString ItemFullMessage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent *ItemMesh;
@@ -44,6 +47,10 @@ private:
 public:
 
 	AItem();
+
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaSeconds) override;
 
 	void Init(FString ItemName, EItemType TypeOfItem);
 
@@ -64,9 +71,9 @@ public:
 
 	bool WasCollected();
 
-	bool IsInventoryItemFull(UIItem *InvItem);
+	bool IsInventoryItemFull(class UIItem *InvItem);
 
-	void IdleAnimation();
+	void IdleAnimation(float DeltaSeconds);
 
 	void CantCollectAnimation();
 

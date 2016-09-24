@@ -20,13 +20,13 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-	USoundBase *GetMatSound();
+	//USoundBase *GetMatSound();
 
-	void SetMatSound(USoundBase *newSound);
+	//void SetMatSound(USoundBase *newSound);
 
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class USoundBase *matSound;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	//class USoundBase *matSound;
 
 	
 	
