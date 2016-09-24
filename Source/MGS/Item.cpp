@@ -5,43 +5,83 @@
 
 AItem::AItem()
 {
-	bIsVisible = false;
+	bIsActive = false;
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Mesh"));
 	RootComponent = ItemMesh;
-	Type = EItemType::Other;
+	
 	bIsNameVisible = true;
-	bAreBulletsVisible = false;
-	bIsSelected = false;
+	
+	PrereqText = "PRE-REQUISITE TEXT";
+	ItemName = "ITEM NAME";
+
+	ItemFullMessage = ItemName + " FULL";
+}
+
+void AItem::Init(FString ItemName, EItemType TypeOfItem)
+{
+	Type = TypeOfItem;
+	this->ItemName = ItemName;  ///Is this really correct?
 }
 
 EItemType AItem::GetItemType()
 {
-	return EItemType();
+	return Type;
 }
 
 bool AItem::CheckIfNameVisible()
 {
-	return false;
+	return bIsNameVisible;
 }
 
-bool AItem::CheckIfBulletsVisible()
-{
-	return false;
-}
 
+//TODO: Fill this out with print out of all vars
 FString AItem::ToString()
 {
 	return FString();
 }
 
-void AItem::SetItemType(EItemType IType)
+void AItem::SetItemType(EItemType NewType)
 {
+	Type = NewType;
+
 }
 
 void AItem::SetNameVisibility(bool NewNameVisibility)
 {
+	bIsNameVisible = NewNameVisibility;
 }
 
-void AItem::SetBulletVisibility(bool NewBulletVisibility)
+bool AItem::IsActive() 
 {
+	return bIsActive;
+
+}
+
+void AItem::SetActive(bool newActiveState)
+{
+	bIsActive = newActiveState;
+}
+
+
+//TODO: Fill this out to make mesh hidden, and show appropriate text
+bool AItem::WasCollected()
+{
+	return false;
+}
+
+//TODO: Fill this out
+//this is called in WasCollected to check if inventory is full or not
+bool IsInventoryItemFull(UIItem *InvItem)
+{
+	return false;
+}
+
+void IdleAnimation()
+{
+
+}
+
+void CantCollectAnimation()
+{
+
 }

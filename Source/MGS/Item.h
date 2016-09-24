@@ -22,16 +22,30 @@ class MGS_API AItem : public AWorldObject
 
 private:
 	
-	uint32 MaxCount;
-	uint32 CurrentCount;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	FString ItemName;
+
+	static FString ItemFullMessage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent *ItemMesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+		EItemType Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+		bool bIsNameVisible;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+		bool bIsActive;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+		FString PrereqText;
 public:
 
 	AItem();
+
+	void Init(FString ItemName, EItemType TypeOfItem);
 
 	UFUNCTION(BlueprintCallable, Category = "Item Properties")
 	EItemType GetItemType();
@@ -40,37 +54,30 @@ public:
 	bool CheckIfNameVisible();
 
 	UFUNCTION(BlueprintCallable, Category = "Item Properties")
-	bool CheckIfBulletsVisible();
-
-	UFUNCTION(BlueprintCallable, Category = "Item Properties")
 		FString ToString();
 
 	FORCEINLINE class UStaticMeshComponent *GetMesh() const { return ItemMesh; }
 
+	bool IsActive();
+
+	void SetActive(bool newActiveState);
+
+	bool WasCollected();
+
+	bool IsInventoryItemFull(UIItem *InvItem);
+
+	void IdleAnimation();
+
+	void CantCollectAnimation();
+
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	EItemType Type;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	bool bIsNameVisible;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	bool bAreBulletsVisible;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	bool bIsSelected;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", Meta = (AllowPrivateAccess = "true"))
-	bool bIsVisible;
 
 	UFUNCTION(BlueprintCallable, Category = "Item Properties")
-	void SetItemType(EItemType IType);
+	void SetItemType(EItemType NewType);
 
 	UFUNCTION(BlueprintCallable, Category = "Item Properties")
 	void SetNameVisibility(bool NewNameVisibility);
 
-	UFUNCTION(BlueprintCallable, Category = "Item Properties")
-		void SetBulletVisibility(bool NewBulletVisibility);
 	
 
 };
