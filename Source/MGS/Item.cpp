@@ -9,7 +9,11 @@ AItem::AItem()
 	bIsActive = false;
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Mesh"));
 	RootComponent = ItemMesh;
-	
+	ItemMesh->bGenerateOverlapEvents = true;
+	TriggerSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Trigger Sphere"));
+	TriggerSphere->InitSphereRadius(105.0f);
+	TriggerSphere->SetupAttachment(RootComponent);
+
 	bIsNameVisible = true;
 	
 	PrereqText = "PRE-REQUISITE TEXT";
@@ -18,7 +22,9 @@ AItem::AItem()
 	ItemFullMessage = ItemName + " FULL";
 
 	TurnRate = FRotator(0.0f, 0.0f, 180.0f);
-
+	TriggerSphere->bGenerateOverlapEvents = true;
+	TriggerSphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnOverlapBegin);
+	
 	//UE_LOG(LogTemp, Warning, TEXT("Can Ever Tick? : %s"), PrimaryActorTick.bCanEverTick ? TEXT("True") : TEXT("False"));
 }
 
@@ -50,6 +56,7 @@ bool AItem::CheckIfNameVisible()
 {
 	return bIsNameVisible;
 }
+
 
 
 //TODO: Fill this out with print out of all vars
@@ -100,10 +107,20 @@ void AItem::IdleAnimation(float DeltaSeconds)
 	
 	//AddActorLocalRotation(TurnRate * DeltaSeconds);
 	AddActorWorldRotation(TurnRate * DeltaSeconds);
-	UE_LOG(LogTemp, Warning, TEXT("DeltaSeconds %f "), DeltaSeconds);
+	//float rotation = TurnRate.Yaw * DeltaSeconds;
+	//UE_LOG(LogTemp, Warning, TEXT("Rotation %f "), rotation);
 }
 
 void AItem::CantCollectAnimation()
 {
 
+}
+
+void AItem::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Beginning Overlap"));
+	SetActorHiddenInGame(true);
+	TriggerSphere->bGenerateOverlapEvents = false;
+	TriggerSphere->bHiddenInGame = true;
+	SetActorTickEnabled(false);
 }

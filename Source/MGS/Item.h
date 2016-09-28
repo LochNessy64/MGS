@@ -44,6 +44,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 		FString PrereqText;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	class USphereComponent* TriggerSphere;
 public:
 
 	AItem();
@@ -65,6 +68,8 @@ public:
 
 	FORCEINLINE class UStaticMeshComponent *GetMesh() const { return ItemMesh; }
 
+	FORCEINLINE class USphereComponent* GetTriggerSphere() const { return TriggerSphere; }
+
 	bool IsActive();
 
 	void SetActive(bool newActiveState);
@@ -76,6 +81,10 @@ public:
 	void IdleAnimation(float DeltaSeconds);
 
 	void CantCollectAnimation();
+
+	/** called when something enters the sphere component*/
+	UFUNCTION()
+		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 protected:
 
