@@ -22,11 +22,17 @@ class MGS_API AItem : public AWorldObject
 
 private:
 	
+	FLinearColor SuccessColor;
+	FLinearColor FailColor;
+	class FCanvasTextItem *ItemText;
+
+	USoundWave *PickupSound;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	FRotator TurnRate;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-	FString ItemName;
+	FText ItemName;
 
 	FString ItemFullMessage;
 
