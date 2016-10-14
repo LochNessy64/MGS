@@ -1,7 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+#define LOCTEXT_NAMESPACE "Mgs Namespace"
 
 #include "MGS.h"
 #include "Item.h"
+
+
 
 AItem::AItem()
 {
@@ -14,8 +17,13 @@ AItem::AItem()
 	bIsActive = false;
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Mesh"));
 	RootComponent = ItemMesh;
-	ItemText = new FCanvasTextItem(FVector2D(ItemMesh->K2_GetComponentLocation().X,ItemMesh->K2_GetComponentLocation().Y), ItemName, GEngine->GetLargeFont(), SuccessColor);
+
+	ItemName = LOCTEXT("Item Name Key","ITEM NAME");
+
+	ItemText = new FCanvasTextItem(FVector2D(ItemMesh->K2_GetComponentLocation().X,ItemMesh->K2_GetComponentLocation().Y), ItemName, JLog, SuccessColor);
 	ItemText->Scale.Set(2.0f, 2.0f);
+	
+
 	ItemMesh->SetCollisionProfileName("OverlapAllDynamic");
 	UE_LOG(LogTemp, Warning, TEXT("Current ItemMesh collision preset: %s"), *(ItemMesh->GetCollisionProfileName().ToString()));
 	UE_LOG(LogTemp, Warning, TEXT("Current Actor collision enabled: %s"), this->GetActorEnableCollision() ? TEXT("true") : TEXT("false"));
@@ -29,9 +37,9 @@ AItem::AItem()
 	bIsNameVisible = true;
 	
 	PrereqText = "PRE-REQUISITE TEXT";
-	ItemName = "ITEM NAME";
+	
 
-	ItemFullMessage = ItemName + " FULL";
+	ItemFullMessage = ItemName.ToString() + " FULL";
 
 	TurnRate = FRotator(0.0f, 0.0f, 180.0f);
 	TriggerSphere->bGenerateOverlapEvents = true;
@@ -56,7 +64,7 @@ void AItem::Tick(float DeltaSeconds)
 void AItem::Init(FString ItemName, EItemType TypeOfItem)
 {
 	Type = TypeOfItem;
-	this->ItemName = ItemName;  ///Is this really correct?
+	//this->ItemName = ItemName;  ///Is this really correct?
 }
 
 EItemType AItem::GetItemType()
@@ -133,7 +141,9 @@ void AItem::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherA
 	UE_LOG(LogTemp, Warning, TEXT("Beginning Overlap"));
 	this->SetActorEnableCollision(false);
 	ItemMesh->bGenerateOverlapEvents = false;
-	SetActorHiddenInGame(true);
+	ItemMesh->SetHiddenInGame(true);
+	
+	//SetActorHiddenInGame(true);
 	TriggerSphere->bGenerateOverlapEvents = false;
 	TriggerSphere->bHiddenInGame = true;
 	SetActorTickEnabled(false);
@@ -141,3 +151,5 @@ void AItem::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherA
 	UE_LOG(LogTemp, Warning, TEXT("Current Actor collision enabled: %s"), this->GetActorEnableCollision() ? TEXT("true") : TEXT("false"));
 	
 }
+
+#undef LOCTEXT_NAMESPACE
