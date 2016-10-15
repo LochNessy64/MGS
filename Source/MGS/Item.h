@@ -3,7 +3,6 @@
 #pragma once
 
 #include "WorldObject.h"
-
 #include "Item.generated.h"
 
 /**
@@ -22,8 +21,7 @@ class MGS_API AItem : public AWorldObject
 
 private:
 	
-	FLinearColor SuccessColor;
-	FLinearColor FailColor;
+	
 	class FCanvasTextItem *ItemText;
 
 	USoundWave *PickupSound;
@@ -34,8 +32,6 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	FText ItemName;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-		UFont *JLog;
 
 	FString ItemFullMessage;
 

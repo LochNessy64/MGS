@@ -3,6 +3,7 @@
 #include "MGS.h"
 #include "MGSGameMode.h"
 #include "MGSCharacter.h"
+#include "ItemTextHUD.h"
 
 AMGSGameMode::AMGSGameMode()
 {
@@ -13,6 +14,7 @@ AMGSGameMode::AMGSGameMode()
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
 
+	HUDClass = AItemTextHUD::StaticClass();
 }
 
 

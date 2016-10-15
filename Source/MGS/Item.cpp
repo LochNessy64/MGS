@@ -10,8 +10,6 @@ AItem::AItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
-	SuccessColor = FLinearColor(1.0f, 1.0f, 1.0f);
-	FailColor = FLinearColor(1.0f, 0.0f, 0.0f);
 	
 	PickupSound = LoadObject<USoundWave>(NULL, TEXT("/Game/Audio/0x0CUnreal.0x0CUnreal"), NULL, LOAD_None, NULL);
 	bIsActive = false;
@@ -20,9 +18,6 @@ AItem::AItem()
 
 	ItemName = LOCTEXT("Item Name Key","ITEM NAME");
 
-	ItemText = new FCanvasTextItem(FVector2D(ItemMesh->K2_GetComponentLocation().X,ItemMesh->K2_GetComponentLocation().Y), ItemName, JLog, SuccessColor);
-	ItemText->Scale.Set(2.0f, 2.0f);
-	
 
 	ItemMesh->SetCollisionProfileName("OverlapAllDynamic");
 	UE_LOG(LogTemp, Warning, TEXT("Current ItemMesh collision preset: %s"), *(ItemMesh->GetCollisionProfileName().ToString()));
@@ -142,7 +137,7 @@ void AItem::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherA
 	this->SetActorEnableCollision(false);
 	ItemMesh->bGenerateOverlapEvents = false;
 	ItemMesh->SetHiddenInGame(true);
-	
+//	Canvas->DrawText(JLog, ItemName,ItemMesh->GetComponentLocation().X, ItemMesh->GetComponentLocation().Y)
 	//SetActorHiddenInGame(true);
 	TriggerSphere->bGenerateOverlapEvents = false;
 	TriggerSphere->bHiddenInGame = true;
