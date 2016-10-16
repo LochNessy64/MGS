@@ -3,10 +3,12 @@
 #pragma once
 
 #include "WorldObject.h"
+#include "Blueprint/UserWidget.h"
+#include "UMG.h"
 #include "Item.generated.h"
 
 /**
- * 
+ * The 3D representation of a pickup item
  */
 UENUM(BlueprintType)
 enum class EItemType : uint8 { Weapon, Ammo, Health, Other };
@@ -21,7 +23,15 @@ class MGS_API AItem : public AWorldObject
 
 private:
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets", meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<class UUserWidget> wText;
 	
+	UPROPERTY()
+	UUserWidget* TextWidget;
+
+	UPROPERTY()
+		UTextBlock* ItemTextBlock;
+
 	class FCanvasTextItem *ItemText;
 
 	USoundWave *PickupSound;
@@ -32,8 +42,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	FText ItemName;
 
-
-	FString ItemFullMessage;
+	FText ItemFullMessage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent *ItemMesh;
@@ -48,10 +57,13 @@ private:
 		bool bIsActive;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
-		FString PrereqText;
+		FText PrereqText;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* TriggerSphere;
+
+	UPROPERTY()
+		bool bWasCollected;
 public:
 
 	AItem();
@@ -81,6 +93,20 @@ public:
 
 	bool WasCollected();
 
+	void SetCollected(bool NewCollectState);
+
+	FText GetItemName();
+
+	void SetItemName(FText NewName);
+
+	FText GetItemFullText();
+
+	void SetItemFullText(FText NewFullText);
+
+	FText GetPrereqText();
+
+	void SetPrereqText(FText NewPrereqText);
+
 	bool IsInventoryItemFull(class UIItem *InvItem);
 
 	void IdleAnimation(float DeltaSeconds);
@@ -90,6 +116,8 @@ public:
 	/** called when something enters the sphere component*/
 	UFUNCTION()
 		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+
 
 protected:
 

@@ -19,9 +19,9 @@ private:
 	UPROPERTY()
 	FLinearColor FailColor;
 
-	UPROPERTY()
+	
 	FCanvasTextItem *DisplaySuccessText;
-	UPROPERTY()
+	
 	FCanvasTextItem *DisplayFailText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))

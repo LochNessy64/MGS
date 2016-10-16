@@ -4,7 +4,7 @@
 
 
 /**
- * 
+ * The HUD representation of a collection of pickup items
  */
 
 enum class EItemType;

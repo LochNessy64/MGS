@@ -1,22 +1,28 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-#define LOCTEXT_NAMESPACE "Mgs Namespace"
+
 
 #include "MGS.h"
+#include "Blueprint/UserWidget.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
 #include "Item.h"
 
+#define LOCTEXT_NAMESPACE "Mgs Namespace"
 
 
 AItem::AItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
-	
+	bWasCollected = false;
+
+	ItemTextBlock = nullptr;
+
 	PickupSound = LoadObject<USoundWave>(NULL, TEXT("/Game/Audio/0x0CUnreal.0x0CUnreal"), NULL, LOAD_None, NULL);
 	bIsActive = false;
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Mesh"));
 	RootComponent = ItemMesh;
 
-	ItemName = LOCTEXT("Item Name Key","ITEM NAME");
+	ItemName = LOCTEXT("Item Name Key", "ITEM NAME");
 
 
 	ItemMesh->SetCollisionProfileName("OverlapAllDynamic");
@@ -31,10 +37,10 @@ AItem::AItem()
 
 	bIsNameVisible = true;
 	
-	PrereqText = "PRE-REQUISITE TEXT";
+	PrereqText = FText::FromString("PRE-REQUISITE TEXT");
 	
 
-	ItemFullMessage = ItemName.ToString() + " FULL";
+	ItemFullMessage = FText::FromString(ItemName.ToString() + " FULL");
 
 	TurnRate = FRotator(0.0f, 0.0f, 180.0f);
 	TriggerSphere->bGenerateOverlapEvents = true;
@@ -47,12 +53,44 @@ void AItem::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (wText)
+	{
+		TextWidget = CreateWidget<UUserWidget>(GetWorld(), wText);
+
+		if (TextWidget)
+		{
+			const FName TextControlName = FName(TEXT("UMGItemTextBlock"));
+			((UTextBlock*)(TextWidget->WidgetTree->FindWidget(TextControlName)))->Text = FText::FromString("CAN YOU SEE ME NOW BITCH?");
+			TextWidget->WidgetTree->FindWidget(TextControlName)->bIsEnabled = true;
+			//TextWidget->Re
+			ItemTextBlock = (UTextBlock*)(TextWidget->WidgetTree->FindWidget(TextControlName));
+
+			
+			//TextWidget->SetVisibility(ESlateVisibility::Visible);
+			//TextWidget->SetPositionInViewport()
+			UCanvasPanelSlot *canvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(ItemTextBlock);
+
+			TextWidget->AddToViewport();
+			FLinearColor TextColorOpacity = TextWidget->ColorAndOpacity;
+			FVector2D TextPosition = canvasSlot->GetPosition();
+			//TextWidget->
+			TextWidget->WidgetTree->FindWidget(FName(TEXT("CanvasPanel_0")));
+			UE_LOG(LogTemp, Warning, TEXT("Text Widget has been created."));
+			UE_LOG(LogTemp, Warning, TEXT("Text Widget visibility is: %s"), ItemTextBlock->bIsEnabled ? TEXT("ON") : TEXT("OFF"));
+			UE_LOG(LogTemp, Warning, TEXT("Text Widget position is: x= %f y= %f"), TextPosition.X, TextPosition.Y);
+			UE_LOG(LogTemp, Warning, TEXT("Text Widget text is: %s"), *ItemTextBlock->Text.ToString());
+			UE_LOG(LogTemp, Warning, TEXT("TextWidget Color and Opacity is: A= %f B= %f G= %f R= %f"), TextColorOpacity.A, TextColorOpacity.B, TextColorOpacity.G, TextColorOpacity.R);
+		}
+	}
 }
 
 void AItem::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
+	TextWidget->SetPositionInViewport(FVector2D(TurnRate.Yaw*DeltaSeconds, TurnRate.Pitch*DeltaSeconds));
+	TextWidget->SetColorAndOpacity(FLinearColor(DeltaSeconds, DeltaSeconds, DeltaSeconds));
+	//TextWidget->WidgetTree->FindWidget(FName(TEXT("UMGItemTextBlock")))->Set
+	//UE_LOG(LogTemp, Warning, TEXT("Text Widget position is: x= %f y= %f"), TextPosition.X, TextPosition.Y);
 	IdleAnimation(DeltaSeconds);
 }
 
@@ -106,7 +144,42 @@ void AItem::SetActive(bool newActiveState)
 //TODO: Fill this out to make mesh hidden, and show appropriate text
 bool AItem::WasCollected()
 {
-	return false;
+	return bWasCollected;
+}
+
+void AItem::SetCollected(bool NewCollectState)
+{
+	bWasCollected = NewCollectState;
+}
+
+FText AItem::GetItemName()
+{
+	return ItemName;
+}
+
+void AItem::SetItemName(FText NewName)
+{
+	ItemName = NewName;
+}
+
+FText AItem::GetItemFullText()
+{
+	return ItemFullMessage;
+}
+
+void AItem::SetItemFullText(FText NewFullText)
+{
+	ItemFullMessage = NewFullText;
+}
+
+FText AItem::GetPrereqText()
+{
+	return PrereqText;
+}
+
+void AItem::SetPrereqText(FText NewPrereqText)
+{
+	PrereqText = NewPrereqText;
 }
 
 //TODO: Fill this out
@@ -134,6 +207,7 @@ void AItem::CantCollectAnimation()
 void AItem::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Beginning Overlap"));
+	bWasCollected = true;
 	this->SetActorEnableCollision(false);
 	ItemMesh->bGenerateOverlapEvents = false;
 	ItemMesh->SetHiddenInGame(true);
@@ -144,7 +218,7 @@ void AItem::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherA
 	SetActorTickEnabled(false);
 	UGameplayStatics::PlaySound2D(OtherActor->GetWorld(), PickupSound);
 	UE_LOG(LogTemp, Warning, TEXT("Current Actor collision enabled: %s"), this->GetActorEnableCollision() ? TEXT("true") : TEXT("false"));
-	
+	//TextWidget->Draw
 }
 
 #undef LOCTEXT_NAMESPACE
