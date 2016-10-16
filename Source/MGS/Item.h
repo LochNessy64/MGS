@@ -23,17 +23,6 @@ class MGS_API AItem : public AWorldObject
 
 private:
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets", meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<class UUserWidget> wText;
-	
-	UPROPERTY()
-	UUserWidget* TextWidget;
-
-	UPROPERTY()
-		UTextBlock* ItemTextBlock;
-
-	class FCanvasTextItem *ItemText;
-
 	USoundWave *PickupSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))

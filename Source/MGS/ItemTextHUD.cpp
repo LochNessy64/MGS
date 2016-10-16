@@ -64,17 +64,16 @@ void AItemTextHUD::DrawHUD()
 	for (TActorIterator<AItem> ItemItr(GetWorld()); ItemItr; ++ItemItr)
 	{
 		AItem * CurrentItem = *ItemItr;
-		//if (CurrentItem->WasCollected())
-		//{
+		if (CurrentItem->WasCollected())
+		{
 			FText SuccessText = CurrentItem->GetItemName();
 			DisplaySuccessText = new FCanvasTextItem((FVector2D)AHUD::Project(CurrentItem->GetActorLocation()), SuccessText, JLog, SuccessColor);
 			UE_LOG(LogTemp, Warning, TEXT("Text Should be on screen"));
 			
 			DisplaySuccessText->Scale = FVector2D(1.0f, 1.0f);
 			Canvas->DrawItem(*DisplaySuccessText);
-			//Canvas->
-			//Canvas->DrawText(JLog, SuccessText, CurrentItem->GetMesh()->GetComponentLocation().X, CurrentItem->GetMesh()->GetComponentLocation().Y);
-		//}
+			
+		}
 
 	}
 
