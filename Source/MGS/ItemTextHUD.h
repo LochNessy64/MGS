@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/HUD.h"
+#include "Item.h"
 #include "ItemTextHUD.generated.h"
 
 /**
@@ -19,15 +20,12 @@ private:
 	UPROPERTY()
 	FLinearColor FailColor;
 
-	
 	FCanvasTextItem *DisplaySuccessText;
 	
 	FCanvasTextItem *DisplayFailText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 		UFont *JLog;
-	
-	void FadeText();
 
 	UPROPERTY()
 		bool IsTextDisplayed;
@@ -37,12 +35,16 @@ protected:
 
 	virtual void PostInitializeComponents() override;
 
+	FTimerHandle FadeTextTimer;
+
+	int8 TimerState;
+
 public:
 
 	AItemTextHUD(const FObjectInitializer& ObjectInitializer);
 
-	void PickUpFailedAnimation();
-	void PickUpSuccessAnimation();
+	void PickUpFailedAnimation(AItem * CurrentItem);
+	void PickUpSuccessAnimation(AItem * CurrentItem);
 
 	FCanvasTextItem GetDisplaySuccessText();
 	void SetDisplaySuccessText(FString text, UStaticMeshComponent *ItemMesh);

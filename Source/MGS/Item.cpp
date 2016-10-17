@@ -156,12 +156,9 @@ bool AItem::IsInventoryItemFull(UIItem *InvItem)
 
 void AItem::IdleAnimation(float DeltaSeconds)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("In Idle Animation"));
-	
-	//AddActorLocalRotation(TurnRate * DeltaSeconds);
+
 	AddActorWorldRotation(TurnRate * DeltaSeconds);
-	//float rotation = TurnRate.Yaw * DeltaSeconds;
-	//UE_LOG(LogTemp, Warning, TEXT("Rotation %f "), rotation);
+
 }
 
 void AItem::CantCollectAnimation()
@@ -169,9 +166,17 @@ void AItem::CantCollectAnimation()
 
 }
 
+
+
 void AItem::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Beginning Overlap"));
+	CollectItem();
+	
+}
+
+void AItem::CollectItem()
+{
 	bWasCollected = true;
 	this->SetActorEnableCollision(false);
 	ItemMesh->bGenerateOverlapEvents = false;
@@ -181,7 +186,7 @@ void AItem::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherA
 	TriggerSphere->bGenerateOverlapEvents = false;
 	TriggerSphere->bHiddenInGame = true;
 	SetActorTickEnabled(false);
-	UGameplayStatics::PlaySound2D(OtherActor->GetWorld(), PickupSound);
+	UGameplayStatics::PlaySound2D(GetWorld(), PickupSound);
 	UE_LOG(LogTemp, Warning, TEXT("Current Actor collision enabled: %s"), this->GetActorEnableCollision() ? TEXT("true") : TEXT("false"));
 }
 

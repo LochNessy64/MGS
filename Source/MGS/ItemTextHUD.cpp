@@ -12,18 +12,24 @@ AItemTextHUD::AItemTextHUD(const FObjectInitializer& ObjectInitializer)
 	SuccessColor = FLinearColor(1.0f, 1.0f, 1.0f);
 	FailColor = FLinearColor(1.0f, 0.0f, 0.0f);
 
+	TimerState = 0;
 
 	IsTextDisplayed = false;
 	JLog = LoadObject<UFont>(NULL, TEXT("/Game/Blueprints/J-LOG_Cameron_Edge_Small_Caps.J-LOG_Cameron_Edge_Small_Caps"), NULL, LOAD_None, NULL);
 	check(JLog);
 }
 
-void AItemTextHUD::PickUpFailedAnimation()
+void AItemTextHUD::PickUpFailedAnimation(AItem * CurrentItem)
 {
 }
 
-void AItemTextHUD::PickUpSuccessAnimation()
+void AItemTextHUD::PickUpSuccessAnimation(AItem * CurrentItem)
 {
+	FText SuccessText = CurrentItem->GetItemName();
+	DisplaySuccessText = new FCanvasTextItem((FVector2D)AHUD::Project(CurrentItem->GetActorLocation()), SuccessText, JLog, SuccessColor);
+
+	DisplaySuccessText->Scale = FVector2D(1.5f, 1.5f);
+	Canvas->DrawItem(*DisplaySuccessText);
 }
 
 FCanvasTextItem AItemTextHUD::GetDisplaySuccessText()
@@ -64,21 +70,26 @@ void AItemTextHUD::DrawHUD()
 	for (TActorIterator<AItem> ItemItr(GetWorld()); ItemItr; ++ItemItr)
 	{
 		AItem * CurrentItem = *ItemItr;
-		if (CurrentItem->WasCollected())
+		if (CurrentItem->WasCollected()) //TODO: add an or condition for if item is full
 		{
-			FText SuccessText = CurrentItem->GetItemName();
-			DisplaySuccessText = new FCanvasTextItem((FVector2D)AHUD::Project(CurrentItem->GetActorLocation()), SuccessText, JLog, SuccessColor);
-			UE_LOG(LogTemp, Warning, TEXT("Text Should be on screen"));
-			
-			DisplaySuccessText->Scale = FVector2D(1.0f, 1.0f);
-			Canvas->DrawItem(*DisplaySuccessText);
+			if (CurrentItem->GetWorldTimerManager().GetTimerElapsed(FadeTextTimer) == -1.0f && CurrentItem->GetWorldTimerManager().GetTimerRemaining(FadeTextTimer) == -1.0f)
+			{
+				if (SuccessColor.A >= 0)
+				{
+					SuccessColor.A -= 0.1f;
+				}
+			}
+			if (TimerState == 0)
+			{
+				TimerState = 1;
+				CurrentItem->GetWorldTimerManager().SetTimer(FadeTextTimer, 3.0f, false);
+			}
+			PickUpSuccessAnimation(CurrentItem);
+			UE_LOG(LogTemp, Warning, TEXT("Time elapsed: %f"), CurrentItem->GetWorldTimerManager().GetTimerElapsed(FadeTextTimer));
+			UE_LOG(LogTemp, Warning, TEXT("Time remaining: %f"), CurrentItem->GetWorldTimerManager().GetTimerRemaining(FadeTextTimer));
 			
 		}
 
-	}
-
-	if (IsTextDisplayed) {
-		
 	}
 
 	
