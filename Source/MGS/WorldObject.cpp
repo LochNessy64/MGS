@@ -9,7 +9,7 @@ AWorldObject::AWorldObject()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	//PrimaryActorTick.bCanEverTick = true;
-	matSound = CreateDefaultSubobject<USoundBase>(TEXT("matSound"));
+//	matSound = CreateDefaultSubobject<USoundBase>(TEXT("matSound"));
 
 }
 
@@ -26,7 +26,7 @@ void AWorldObject::Tick( float DeltaTime )
 	Super::Tick( DeltaTime );
 
 }
-
+/*
 USoundBase * AWorldObject::GetMatSound() {
 	if (matSound) {
 		return matSound;
@@ -39,3 +39,5 @@ USoundBase * AWorldObject::GetMatSound() {
 void AWorldObject::SetMatSound(USoundBase *newSound) {
 	matSound = newSound;
 }
+
+*/
