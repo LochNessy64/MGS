@@ -15,10 +15,7 @@ class MGS_API AItemTextHUD : public AHUD
 	GENERATED_BODY()
 	
 private:
-	UPROPERTY()
-	FLinearColor SuccessColor;
-	UPROPERTY()
-	FLinearColor FailColor;
+
 
 	FCanvasTextItem *DisplaySuccessText;
 	
@@ -35,9 +32,7 @@ protected:
 
 	virtual void PostInitializeComponents() override;
 
-	FTimerHandle FadeTextTimer;
-
-	int8 TimerState;
+	float TimeDurationInSeconds;
 
 public:
 
@@ -47,10 +42,10 @@ public:
 	void PickUpSuccessAnimation(AItem * CurrentItem);
 
 	FCanvasTextItem GetDisplaySuccessText();
-	void SetDisplaySuccessText(FString text, UStaticMeshComponent *ItemMesh);
+	void SetDisplaySuccessText(FString text, AItem * CurrentItem);
 
 	FCanvasTextItem GetDisplayFailText();
-	void SetDisplayFailText(FString text, UStaticMeshComponent *ItemMesh);
+	void SetDisplayFailText(FString text, AItem * CurrentItem);
 
 	bool GetIsTextDisplayed();
 	void SetIsTextDisplayed(bool newDisplayState);

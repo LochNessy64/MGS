@@ -15,6 +15,11 @@ AItem::AItem()
 	
 	bWasCollected = false;
 
+	bIsFadeTextTimerSet = false;
+
+	SuccessColor = FLinearColor(1.0f, 1.0f, 1.0f);
+	FailColor = FLinearColor(1.0f, 0.0f, 0.0f);
+
 	PickupSound = LoadObject<USoundWave>(NULL, TEXT("/Game/Audio/0x0CUnreal.0x0CUnreal"), NULL, LOAD_None, NULL);
 	bIsActive = false;
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Mesh"));
@@ -188,6 +193,59 @@ void AItem::CollectItem()
 	SetActorTickEnabled(false);
 	UGameplayStatics::PlaySound2D(GetWorld(), PickupSound);
 	UE_LOG(LogTemp, Warning, TEXT("Current Actor collision enabled: %s"), this->GetActorEnableCollision() ? TEXT("true") : TEXT("false"));
+}
+
+FTimerHandle AItem::GetFadeTextTimer()
+{
+	return FadeTextTimer;
+}
+
+void AItem::SetFadeTextTimer(float duration)
+{
+	GetWorldTimerManager().SetTimer(FadeTextTimer, duration, false);
+
+}
+
+float AItem::GetFadeTextTimerElapsed()
+{
+	return GetWorldTimerManager().GetTimerElapsed(FadeTextTimer);
+}
+
+float AItem::GetFadeTextTimerRemaining()
+{
+	return GetWorldTimerManager().GetTimerRemaining(FadeTextTimer);
+}
+
+bool AItem::IsFadeTextTimerSet()
+{
+	return bIsFadeTextTimerSet;
+}
+
+void AItem::SetFadeTextTimer(bool newTimerState)
+{
+	bIsFadeTextTimerSet = newTimerState;
+}
+
+FLinearColor &AItem::GetSuccessColor()
+{
+	return SuccessColor;
+}
+
+
+void AItem::SetSuccessColor(float Red, float Green, float Blue, float Alpha)
+{
+	SuccessColor = FLinearColor(Red, Green, Blue, Alpha);
+}
+
+FLinearColor &AItem::GetFailColor()
+{
+	return FailColor;
+}
+
+
+void AItem::SetFailColor(float Red, float Green, float Blue, float Alpha)
+{
+	FailColor = FLinearColor(Red, Green, Blue, Alpha);
 }
 
 #undef LOCTEXT_NAMESPACE
