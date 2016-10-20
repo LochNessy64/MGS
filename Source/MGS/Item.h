@@ -128,6 +128,17 @@ public:
 
 	void SetFailColor(float Red = 1.0f, float Green = 0.0f, float Blue = 0.0f, float Alpha = 1.0f);
 
+	void PickUpFailedAnimation();
+	void PickUpSuccessAnimation();
+
+	FCanvasTextItem* GetDisplaySuccessText();
+
+	void SetDisplaySuccessText(FCanvasTextItem *NewDisplayText);
+
+	void SetDisplayFailText(FCanvasTextItem *NewDisplayText);
+
+	FCanvasTextItem* GetDisplayFailText();
+
 protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Item Properties")
@@ -144,4 +155,8 @@ protected:
 		FLinearColor SuccessColor;
 	UPROPERTY()
 		FLinearColor FailColor;
+
+	FCanvasTextItem *DisplaySuccessText;
+
+	FCanvasTextItem *DisplayFailText;
 };

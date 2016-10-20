@@ -16,39 +16,23 @@ AItemTextHUD::AItemTextHUD(const FObjectInitializer& ObjectInitializer)
 	TimeDurationInSeconds = 3.0f;
 }
 
-void AItemTextHUD::PickUpFailedAnimation(AItem * CurrentItem)
+
+void AItemTextHUD::SetDisplaySuccessText(AItem *CurrentItem)
 {
+	FCanvasTextItem * NewDisplaySuccessText = new FCanvasTextItem((FVector2D)AHUD::Project(CurrentItem->GetActorLocation()), CurrentItem->GetItemName(), JLog, CurrentItem->GetSuccessColor());
+	NewDisplaySuccessText->Scale.Set(2.0f, 2.0f);
+	
+	CurrentItem->SetDisplaySuccessText(NewDisplaySuccessText);
+	
 }
 
-void AItemTextHUD::PickUpSuccessAnimation(AItem * CurrentItem)
-{
-	FText SuccessText = CurrentItem->GetItemName();
-	DisplaySuccessText = new FCanvasTextItem((FVector2D)AHUD::Project(CurrentItem->GetActorLocation()), SuccessText, JLog, CurrentItem->GetSuccessColor());
 
-	DisplaySuccessText->Scale = FVector2D(1.5f, 1.5f);
-	Canvas->DrawItem(*DisplaySuccessText);
-}
-
-FCanvasTextItem AItemTextHUD::GetDisplaySuccessText()
+void AItemTextHUD::SetDisplayFailText(AItem * CurrentItem)
 {
-	return *DisplaySuccessText;
-}
+	FCanvasTextItem * NewDisplayFailText  = new FCanvasTextItem((FVector2D)AHUD::Project(CurrentItem->GetActorLocation()), CurrentItem->GetItemFullText(), JLog, CurrentItem->GetFailColor());
+	NewDisplayFailText->Scale.Set(2.0f, 2.0f);
 
-void AItemTextHUD::SetDisplaySuccessText(FString text, AItem * CurrentItem)
-{
-	DisplaySuccessText = new FCanvasTextItem((FVector2D)AHUD::Project(CurrentItem->GetActorLocation()), FText::FromString(text), JLog, CurrentItem->GetSuccessColor());
-	DisplaySuccessText->Scale.Set(2.0f, 2.0f);
-}
-
-FCanvasTextItem AItemTextHUD::GetDisplayFailText()
-{
-	return *DisplayFailText;
-}
-
-void AItemTextHUD::SetDisplayFailText(FString text, AItem * CurrentItem)
-{
-	DisplayFailText = new FCanvasTextItem((FVector2D)AHUD::Project(CurrentItem->GetActorLocation()), FText::FromString(text), JLog, CurrentItem->GetFailColor());
-	DisplayFailText->Scale.Set(2.0f, 2.0f);
+	CurrentItem->SetDisplayFailText(NewDisplayFailText);
 }
 
 bool AItemTextHUD::GetIsTextDisplayed()
@@ -78,13 +62,15 @@ void AItemTextHUD::DrawHUD()
 				CurrentItem->SetFadeTextTimer(true);
 				CurrentItem->SetFadeTextTimer(TimeDurationInSeconds);
 			}
-			PickUpSuccessAnimation(CurrentItem);
-			
+
+			SetDisplayFailText(CurrentItem);
+			Canvas->DrawItem(*CurrentItem->GetDisplayFailText());
+
 			if (CurrentItem->GetFadeTextTimerElapsed() == -1.0f && CurrentItem->GetFadeTextTimerRemaining() == -1.0f)
 			{
-				if (CurrentItem->GetSuccessColor().A >= 0)
+				if (CurrentItem->GetFailColor().A >= 0)
 				{
-					CurrentItem->GetSuccessColor().A -= 0.1f;
+					CurrentItem->GetFailColor().A -= 0.1f;
 				}
 			}
 		}

@@ -248,4 +248,24 @@ void AItem::SetFailColor(float Red, float Green, float Blue, float Alpha)
 	FailColor = FLinearColor(Red, Green, Blue, Alpha);
 }
 
+FCanvasTextItem * AItem::GetDisplaySuccessText()
+{
+	return DisplaySuccessText;
+}
+
+FCanvasTextItem * AItem::GetDisplayFailText()
+{
+	return DisplayFailText;
+}
+
+void AItem::SetDisplaySuccessText(FCanvasTextItem* NewDisplayText)
+{
+	DisplaySuccessText = NewDisplayText;
+}
+
+void AItem::SetDisplayFailText(FCanvasTextItem * NewDisplayText)
+{
+	DisplayFailText = NewDisplayText;
+}
+
 #undef LOCTEXT_NAMESPACE

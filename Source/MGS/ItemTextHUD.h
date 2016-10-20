@@ -16,11 +16,6 @@ class MGS_API AItemTextHUD : public AHUD
 	
 private:
 
-
-	FCanvasTextItem *DisplaySuccessText;
-	
-	FCanvasTextItem *DisplayFailText;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 		UFont *JLog;
 
@@ -38,14 +33,10 @@ public:
 
 	AItemTextHUD(const FObjectInitializer& ObjectInitializer);
 
-	void PickUpFailedAnimation(AItem * CurrentItem);
-	void PickUpSuccessAnimation(AItem * CurrentItem);
 
-	FCanvasTextItem GetDisplaySuccessText();
-	void SetDisplaySuccessText(FString text, AItem * CurrentItem);
+	void SetDisplaySuccessText(AItem * CurrentItem);
 
-	FCanvasTextItem GetDisplayFailText();
-	void SetDisplayFailText(FString text, AItem * CurrentItem);
+	void SetDisplayFailText(AItem * CurrentItem);
 
 	bool GetIsTextDisplayed();
 	void SetIsTextDisplayed(bool newDisplayState);
