@@ -17,8 +17,11 @@ AItem::AItem()
 
 	bIsFadeTextTimerSet = false;
 
+	TimerDuration = 3.0f;
+
 	SuccessColor = FLinearColor(1.0f, 1.0f, 1.0f);
 	FailColor = FLinearColor(1.0f, 0.0f, 0.0f);
+	TextOpacity = 1.0f;
 
 	PickupSound = LoadObject<USoundWave>(NULL, TEXT("/Game/Audio/0x0CUnreal.0x0CUnreal"), NULL, LOAD_None, NULL);
 	bIsActive = false;
@@ -62,6 +65,16 @@ void AItem::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 	
 	IdleAnimation(DeltaSeconds);
+	if (bIsActive)
+	{
+		if (GetWorldTimerManager().GetTimerElapsed(FadeTextTimer) == -1.0f && GetWorldTimerManager().GetTimerRemaining(FadeTextTimer) == -1.0f)
+		{
+			if (TextOpacity >= 0)
+			{
+				TextOpacity -= 0.1f;
+			}
+		}
+	}
 }
 
 void AItem::Init(FString ItemName, EItemType TypeOfItem)
@@ -176,6 +189,13 @@ void AItem::CantCollectAnimation()
 void AItem::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Beginning Overlap"));
+	//TODO: Add logic to check if user inventory is full
+	if (!bIsFadeTextTimerSet)
+	{
+		bIsFadeTextTimerSet = true;
+		GetWorldTimerManager().SetTimer(FadeTextTimer, TimerDuration, false);
+	}
+	
 	CollectItem();
 	
 }
@@ -192,80 +212,11 @@ void AItem::CollectItem()
 	TriggerSphere->bHiddenInGame = true;
 	SetActorTickEnabled(false);
 	UGameplayStatics::PlaySound2D(GetWorld(), PickupSound);
-	UE_LOG(LogTemp, Warning, TEXT("Current Actor collision enabled: %s"), this->GetActorEnableCollision() ? TEXT("true") : TEXT("false"));
+
+	
+	//UE_LOG(LogTemp, Warning, TEXT("Current Actor collision enabled: %s"), this->GetActorEnableCollision() ? TEXT("true") : TEXT("false"));
+	
 }
 
-FTimerHandle AItem::GetFadeTextTimer()
-{
-	return FadeTextTimer;
-}
-
-void AItem::SetFadeTextTimer(float duration)
-{
-	GetWorldTimerManager().SetTimer(FadeTextTimer, duration, false);
-
-}
-
-float AItem::GetFadeTextTimerElapsed()
-{
-	return GetWorldTimerManager().GetTimerElapsed(FadeTextTimer);
-}
-
-float AItem::GetFadeTextTimerRemaining()
-{
-	return GetWorldTimerManager().GetTimerRemaining(FadeTextTimer);
-}
-
-bool AItem::IsFadeTextTimerSet()
-{
-	return bIsFadeTextTimerSet;
-}
-
-void AItem::SetFadeTextTimer(bool newTimerState)
-{
-	bIsFadeTextTimerSet = newTimerState;
-}
-
-FLinearColor &AItem::GetSuccessColor()
-{
-	return SuccessColor;
-}
-
-
-void AItem::SetSuccessColor(float Red, float Green, float Blue, float Alpha)
-{
-	SuccessColor = FLinearColor(Red, Green, Blue, Alpha);
-}
-
-FLinearColor &AItem::GetFailColor()
-{
-	return FailColor;
-}
-
-
-void AItem::SetFailColor(float Red, float Green, float Blue, float Alpha)
-{
-	FailColor = FLinearColor(Red, Green, Blue, Alpha);
-}
-
-FCanvasTextItem * AItem::GetDisplaySuccessText()
-{
-	return DisplaySuccessText;
-}
-
-FCanvasTextItem * AItem::GetDisplayFailText()
-{
-	return DisplayFailText;
-}
-
-void AItem::SetDisplaySuccessText(FCanvasTextItem* NewDisplayText)
-{
-	DisplaySuccessText = NewDisplayText;
-}
-
-void AItem::SetDisplayFailText(FCanvasTextItem * NewDisplayText)
-{
-	DisplayFailText = NewDisplayText;
-}
 
 #undef LOCTEXT_NAMESPACE

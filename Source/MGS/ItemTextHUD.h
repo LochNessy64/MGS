@@ -27,16 +27,10 @@ protected:
 
 	virtual void PostInitializeComponents() override;
 
-	float TimeDurationInSeconds;
 
 public:
 
 	AItemTextHUD(const FObjectInitializer& ObjectInitializer);
-
-
-	void SetDisplaySuccessText(AItem * CurrentItem);
-
-	void SetDisplayFailText(AItem * CurrentItem);
 
 	bool GetIsTextDisplayed();
 	void SetIsTextDisplayed(bool newDisplayState);

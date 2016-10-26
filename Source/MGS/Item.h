@@ -108,37 +108,10 @@ public:
 
 	void CollectItem();
 
-	FTimerHandle GetFadeTextTimer();
-
-	void SetFadeTextTimer(float duration);
-
-	float GetFadeTextTimerElapsed();
-
-	float GetFadeTextTimerRemaining();
-
-	bool IsFadeTextTimerSet();
-
-	void SetFadeTextTimer(bool newTimerState);
-
-	FLinearColor &GetSuccessColor();
-
-	void SetSuccessColor(float Red=1.0f, float Green=1.0f, float Blue=1.0f, float Alpha=1.0f);
-
-	FLinearColor &GetFailColor();
-
-	void SetFailColor(float Red = 1.0f, float Green = 0.0f, float Blue = 0.0f, float Alpha = 1.0f);
-
 	void PickUpFailedAnimation();
 	void PickUpSuccessAnimation();
 
-	FCanvasTextItem* GetDisplaySuccessText();
-
-	void SetDisplaySuccessText(FCanvasTextItem *NewDisplayText);
-
-	void SetDisplayFailText(FCanvasTextItem *NewDisplayText);
-
-	FCanvasTextItem* GetDisplayFailText();
-
+	
 protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Item Properties")
@@ -147,16 +120,5 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Item Properties")
 	void SetNameVisibility(bool NewNameVisibility);
 
-	FTimerHandle FadeTextTimer;
-
-	bool bIsFadeTextTimerSet;
-
-	UPROPERTY()
-		FLinearColor SuccessColor;
-	UPROPERTY()
-		FLinearColor FailColor;
-
-	FCanvasTextItem *DisplaySuccessText;
-
-	FCanvasTextItem *DisplayFailText;
+	
 };
