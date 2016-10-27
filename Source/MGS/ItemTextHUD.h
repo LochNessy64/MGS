@@ -4,6 +4,7 @@
 
 #include "GameFramework/HUD.h"
 #include "Item.h"
+#include "UIText.h"
 #include "ItemTextHUD.generated.h"
 
 /**
@@ -27,6 +28,7 @@ protected:
 
 	virtual void PostInitializeComponents() override;
 
+	TArray<UIText*> TextArray;
 
 public:
 

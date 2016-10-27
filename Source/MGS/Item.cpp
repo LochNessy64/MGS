@@ -13,15 +13,9 @@ AItem::AItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
+	NoCollisionTimer = new FTimerHandle();
+	
 	bWasCollected = false;
-
-	bIsFadeTextTimerSet = false;
-
-	TimerDuration = 3.0f;
-
-	SuccessColor = FLinearColor(1.0f, 1.0f, 1.0f);
-	FailColor = FLinearColor(1.0f, 0.0f, 0.0f);
-	TextOpacity = 1.0f;
 
 	PickupSound = LoadObject<USoundWave>(NULL, TEXT("/Game/Audio/0x0CUnreal.0x0CUnreal"), NULL, LOAD_None, NULL);
 	bIsActive = false;
@@ -67,13 +61,7 @@ void AItem::Tick(float DeltaSeconds)
 	IdleAnimation(DeltaSeconds);
 	if (bIsActive)
 	{
-		if (GetWorldTimerManager().GetTimerElapsed(FadeTextTimer) == -1.0f && GetWorldTimerManager().GetTimerRemaining(FadeTextTimer) == -1.0f)
-		{
-			if (TextOpacity >= 0)
-			{
-				TextOpacity -= 0.1f;
-			}
-		}
+		
 	}
 }
 
@@ -190,12 +178,7 @@ void AItem::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherA
 {
 	UE_LOG(LogTemp, Warning, TEXT("Beginning Overlap"));
 	//TODO: Add logic to check if user inventory is full
-	if (!bIsFadeTextTimerSet)
-	{
-		bIsFadeTextTimerSet = true;
-		GetWorldTimerManager().SetTimer(FadeTextTimer, TimerDuration, false);
-	}
-	
+
 	CollectItem();
 	
 }
@@ -217,6 +200,27 @@ void AItem::CollectItem()
 	//UE_LOG(LogTemp, Warning, TEXT("Current Actor collision enabled: %s"), this->GetActorEnableCollision() ? TEXT("true") : TEXT("false"));
 	
 }
+
+void AItem::SetNoCollisionTimer(float Duration)
+{
+	GetWorldTimerManager().SetTimer(*NoCollisionTimer, Duration, false);
+}
+
+FTimerHandle* AItem::GetNoCollisionTimer()
+{
+	return NoCollisionTimer;
+}
+
+float AItem::GetNoCollisionTimerElapsed()
+{
+	return GetWorldTimerManager().GetTimerElapsed(*NoCollisionTimer);
+}
+
+float AItem::GetNoCollisionTimerRemaining()
+{
+	return GetWorldTimerManager().GetTimerRemaining(*NoCollisionTimer);
+}
+
 
 
 #undef LOCTEXT_NAMESPACE

@@ -2,7 +2,6 @@
 
 #include "MGS.h"
 #include "Item.h"
-#include "UIText.h"
 #include "ItemTextHUD.h"
 
 
@@ -35,25 +34,36 @@ void AItemTextHUD::DrawHUD()
 	{
 
 		AItem * CurrentItem = *ItemItr;
-		//UE_LOG(LogTemp, Warning, TEXT("Time elapsed: %f"), CurrentItem->GetFadeTextTimerElapsed());
-		//UE_LOG(LogTemp, Warning, TEXT("Time remaining: %f"), CurrentItem->GetFadeTextTimerRemaining());
+		if (CurrentItem->GetNoCollisionTimer() == nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("No Collision Timer is null"));
+		}
+		UE_LOG(LogTemp, Warning, TEXT("Time elapsed: %f"), CurrentItem->GetNoCollisionTimerElapsed());
+		UE_LOG(LogTemp, Warning, TEXT("Time remaining: %f"), CurrentItem->GetNoCollisionTimerRemaining());
 		
 		if (CurrentItem->WasCollected()) //TODO: add an or condition for if item is full
 		{
-			UIText SuccessText    
+			//UE_LOG(LogTemp, Warning, TEXT("Is No Collision Timer Active? "), CurrentItem->GetWorldTimerManager().IsTimerActive(*(CurrentItem->GetNoCollisionTimer())) ? TEXT("Yes") : TEXT("No"));
+			UIText * SuccessText = new UIText(CurrentItem, (FVector2D)AHUD::Project(CurrentItem->GetActorLocation()), CurrentItem->GetItemName(), JLog, FLinearColor(1.0f, 1.0f, 1.0f));
+            //CurrentItem->SetNoCollisionTimer(3.0f);
+			//SetDisplayFailText(CurrentItem);
+			//Canvas->DrawItem(*CurrentItem->GetDisplayFailText());
+			TextArray.Add(SuccessText);
 
-			SetDisplayFailText(CurrentItem);
-			Canvas->DrawItem(*CurrentItem->GetDisplayFailText());
-
-			
+		
+			//Destroy the actor from the scene
+			CurrentItem->Destroy();
 		}
 
 
-		//Destroy the actor from the scene
+		 
 	}
 
 	//TODO: Create a list of UIText that only keeps track of texts that are currently going to or are being drawn
-
+	for (auto& TextItr : TextArray)
+	{
+		Canvas->DrawItem(*(TextItr->GetDisplayText()));
+	}
 	
 }
 
