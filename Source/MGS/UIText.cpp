@@ -11,6 +11,8 @@ UIText::UIText(AActor *Actor, FVector2D NewScreenPos, FText TextToDisplay, UFont
 
 	DisplayText = new FCanvasTextItem(NewScreenPos, TextToDisplay, NewFont, NewColor);
 	
+	DisplayTimer = new FTimerHandle();
+	FadeTimer = new FTimerHandle();
 	Text = TextToDisplay;
 	Color = NewColor;
 	ScreenPos = NewScreenPos;
@@ -21,22 +23,30 @@ UIText::~UIText()
 {
 	delete DisplayText;
 	DisplayText = nullptr;
+	delete DisplayTimer;
+	DisplayTimer = nullptr;
+	delete FadeTimer;
+	FadeTimer = nullptr;
 
 }
 
 void UIText::SetColor(FLinearColor NewColor)
 {
 	Color = NewColor;
+	DisplayText->SetColor(Color);
 }
 
 FLinearColor UIText::GetColor()
 {
+	
 	return Color;
 }
 
 void UIText::SetOpacity(float NewOpacity)
 {
 	Opacity = NewOpacity;
+	Color.A = Opacity;
+	DisplayText->SetColor(Color);
 }
 
 float UIText::GetOpacity()
@@ -47,6 +57,7 @@ float UIText::GetOpacity()
 void UIText::SetScreenPos(FVector2D NewScreenPos)
 {
 	ScreenPos = NewScreenPos;
+	DisplayText->Position = ScreenPos;
 }
 
 FVector2D UIText::GetScreenPos()
@@ -57,6 +68,7 @@ FVector2D UIText::GetScreenPos()
 void UIText::SetFont(UFont *NewFont)
 {
 	Font = NewFont;
+	DisplayText->Font = Font;
 }
 
 UFont* UIText::GetFont()
@@ -67,6 +79,7 @@ UFont* UIText::GetFont()
 void UIText::SetText(FText NewText)
 {
 	Text = NewText;
+	DisplayText->Text = Text;
 }
 
 FText UIText::GetText()
