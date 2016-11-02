@@ -46,6 +46,7 @@ void AItemTextHUD::DrawHUD()
 			//UE_LOG(LogTemp, Warning, TEXT("Is No Collision Timer Active? "), CurrentItem->GetWorldTimerManager().IsTimerActive(*(CurrentItem->GetNoCollisionTimer())) ? TEXT("Yes") : TEXT("No"));
 			
 			UIText * SuccessText = new UIText(CurrentItem, (FVector2D)AHUD::Project(CurrentItem->GetActorLocation()), CurrentItem->GetItemName(), JLog, FLinearColor(1.0f, 1.0f, 1.0f));
+			SuccessText->SetExternalActorLocation(CurrentItem->GetActorLocation());
             //CurrentItem->SetNoCollisionTimer(3.0f);
 			//SetDisplayFailText(CurrentItem);
 			//Canvas->DrawItem(*CurrentItem->GetDisplayFailText());
@@ -66,21 +67,39 @@ void AItemTextHUD::DrawHUD()
 	//TODO: Create a list of UIText that only keeps track of texts that are currently going to or are being drawn
 	for (auto& TextItr : TextArray)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Time elapsed: %f"), TextItr->GetDisplayTimerElapsed());
-		UE_LOG(LogTemp, Warning, TEXT("Time remaining: %f"), TextItr->GetDisplayTimerRemaining());
+		
+		TextItr->GetDisplayText()->Position = (FVector2D)AHUD::Project(TextItr->GetExternalActorLocation());
 		Canvas->DrawItem(*(TextItr->GetDisplayText()));
 
 		//check if display timer has finished
-		if (TextItr->GetDisplayTimerElapsed() == -1.0f && TextItr->GetDisplayTimerRemaining() == -1.0f)
+		if (TextItr->GetDisplayTimer()->IsValid())
 		{
-			TextItr->SetFadeTimer(0.5f);
-
-			if ((TextItr->GetOpacity() >= 1.0f) && !(TextItr->GetFadeTimerElapsed() == -1.0f && TextItr->GetFadeTimerRemaining() == -1.0f))
+			UE_LOG(LogTemp, Warning, TEXT("Display Time elapsed: %f"), TextItr->GetDisplayTimerElapsed());
+			UE_LOG(LogTemp, Warning, TEXT("Display Time remaining: %f"), TextItr->GetDisplayTimerRemaining());
+			if (TextItr->GetDisplayTimerElapsed() == -1.0f && TextItr->GetDisplayTimerRemaining() == -1.0f)
 			{
-				TextItr->SetOpacity(TextItr->GetOpacity()-0.1f);
+				TextItr->SetFadeTimer(0.5f);
+				TextItr->GetDisplayTimer()->Invalidate();
+
+				
+
+
+			}
+		}
+		if (TextItr->GetFadeTimer()->IsValid())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Fade Time elapsed: %f"), TextItr->GetFadeTimerElapsed());
+			UE_LOG(LogTemp, Warning, TEXT("Fade Time remaining: %f"), TextItr->GetFadeTimerRemaining());
+			if ((TextItr->GetOpacity() >= 0.0f) && !(TextItr->GetFadeTimerElapsed() == -1.0f && TextItr->GetFadeTimerRemaining() == -1.0f))
+			{
+				TextItr->SetOpacity(TextItr->GetOpacity() - 0.1f);
 			}
 
-			
+			if (TextItr->GetFadeTimerElapsed() == -1.0f && TextItr->GetFadeTimerRemaining() == -1.0f)
+			{
+				//TextArray.RemoveAt(TextArray.)
+				//TextItr->~UIText();
+			}
 		}
 	}
 	

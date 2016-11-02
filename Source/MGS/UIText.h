@@ -57,6 +57,11 @@ public:
 
 	FCanvasTextItem* GetDisplayText();
 
+	void SetExternalActorLocation(FVector NewLocation);
+
+	FVector GetExternalActorLocation();
+
+	FTimerManager* GetTimerManager();
 
 private:
 	FCanvasTextItem *DisplayText;
@@ -80,5 +85,7 @@ private:
 	FTimerManager *TimerManager;
 
 	FText Text;
+
+	FVector ExternalActorLocation;
 
 };
