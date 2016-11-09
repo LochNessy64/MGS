@@ -13,6 +13,8 @@ AItem::AItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
+	NoCollisionTimer = new FTimerHandle();
+	
 	bWasCollected = false;
 
 	PickupSound = LoadObject<USoundWave>(NULL, TEXT("/Game/Audio/0x0CUnreal.0x0CUnreal"), NULL, LOAD_None, NULL);
@@ -57,6 +59,10 @@ void AItem::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 	
 	IdleAnimation(DeltaSeconds);
+	if (bIsActive)
+	{
+		
+	}
 }
 
 void AItem::Init(FString ItemName, EItemType TypeOfItem)
@@ -171,6 +177,8 @@ void AItem::CantCollectAnimation()
 void AItem::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Beginning Overlap"));
+	//TODO: Add logic to check if user inventory is full
+
 	CollectItem();
 	
 }
@@ -187,7 +195,32 @@ void AItem::CollectItem()
 	TriggerSphere->bHiddenInGame = true;
 	SetActorTickEnabled(false);
 	UGameplayStatics::PlaySound2D(GetWorld(), PickupSound);
-	UE_LOG(LogTemp, Warning, TEXT("Current Actor collision enabled: %s"), this->GetActorEnableCollision() ? TEXT("true") : TEXT("false"));
+
+	
+	//UE_LOG(LogTemp, Warning, TEXT("Current Actor collision enabled: %s"), this->GetActorEnableCollision() ? TEXT("true") : TEXT("false"));
+	
 }
+
+void AItem::SetNoCollisionTimer(float Duration)
+{
+	GetWorldTimerManager().SetTimer(*NoCollisionTimer, Duration, false);
+}
+
+FTimerHandle* AItem::GetNoCollisionTimer()
+{
+	return NoCollisionTimer;
+}
+
+float AItem::GetNoCollisionTimerElapsed()
+{
+	return GetWorldTimerManager().GetTimerElapsed(*NoCollisionTimer);
+}
+
+float AItem::GetNoCollisionTimerRemaining()
+{
+	return GetWorldTimerManager().GetTimerRemaining(*NoCollisionTimer);
+}
+
+
 
 #undef LOCTEXT_NAMESPACE

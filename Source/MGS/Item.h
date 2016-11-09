@@ -108,6 +108,16 @@ public:
 
 	void CollectItem();
 
+	void PickUpFailedAnimation();
+	void PickUpSuccessAnimation();
+
+	void SetNoCollisionTimer(float Duration);
+
+	FTimerHandle* GetNoCollisionTimer();
+	
+	float GetNoCollisionTimerElapsed();
+	
+	float GetNoCollisionTimerRemaining();
 protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Item Properties")
@@ -116,6 +126,5 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Item Properties")
 	void SetNameVisibility(bool NewNameVisibility);
 
-	
-
+	FTimerHandle *NoCollisionTimer;
 };

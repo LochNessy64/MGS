@@ -9,49 +9,11 @@
 AItemTextHUD::AItemTextHUD(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
 {
-	SuccessColor = FLinearColor(1.0f, 1.0f, 1.0f);
-	FailColor = FLinearColor(1.0f, 0.0f, 0.0f);
-
-	TimerState = 0;
 
 	IsTextDisplayed = false;
 	JLog = LoadObject<UFont>(NULL, TEXT("/Game/Blueprints/J-LOG_Cameron_Edge_Small_Caps.J-LOG_Cameron_Edge_Small_Caps"), NULL, LOAD_None, NULL);
 	check(JLog);
-}
 
-void AItemTextHUD::PickUpFailedAnimation(AItem * CurrentItem)
-{
-}
-
-void AItemTextHUD::PickUpSuccessAnimation(AItem * CurrentItem)
-{
-	FText SuccessText = CurrentItem->GetItemName();
-	DisplaySuccessText = new FCanvasTextItem((FVector2D)AHUD::Project(CurrentItem->GetActorLocation()), SuccessText, JLog, SuccessColor);
-
-	DisplaySuccessText->Scale = FVector2D(1.5f, 1.5f);
-	Canvas->DrawItem(*DisplaySuccessText);
-}
-
-FCanvasTextItem AItemTextHUD::GetDisplaySuccessText()
-{
-	return *DisplaySuccessText;
-}
-
-void AItemTextHUD::SetDisplaySuccessText(FString text, UStaticMeshComponent* ItemMesh)
-{
-	DisplaySuccessText = new FCanvasTextItem(FVector2D(ItemMesh->K2_GetComponentLocation().X, ItemMesh->K2_GetComponentLocation().Y), FText::FromString(text), JLog, SuccessColor);
-	DisplaySuccessText->Scale.Set(2.0f, 2.0f);
-}
-
-FCanvasTextItem AItemTextHUD::GetDisplayFailText()
-{
-	return *DisplayFailText;
-}
-
-void AItemTextHUD::SetDisplayFailText(FString text, UStaticMeshComponent* ItemMesh)
-{
-	DisplayFailText = new FCanvasTextItem(FVector2D(ItemMesh->GetComponentLocation().X, ItemMesh->GetComponentLocation().Y), FText::FromString(text), JLog, FailColor);
-	DisplayFailText->Scale.Set(2.0f, 2.0f);
 }
 
 bool AItemTextHUD::GetIsTextDisplayed()
@@ -67,32 +29,82 @@ void AItemTextHUD::SetIsTextDisplayed(bool newDisplayState)
 void AItemTextHUD::DrawHUD()
 {
 	Super::DrawHUD();
+	
 	for (TActorIterator<AItem> ItemItr(GetWorld()); ItemItr; ++ItemItr)
 	{
+
 		AItem * CurrentItem = *ItemItr;
+		if (CurrentItem->GetNoCollisionTimer() == nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("No Collision Timer is null"));
+		}
+		//UE_LOG(LogTemp, Warning, TEXT("Time elapsed: %f"), CurrentItem->GetNoCollisionTimerElapsed());
+		//UE_LOG(LogTemp, Warning, TEXT("Time remaining: %f"), CurrentItem->GetNoCollisionTimerRemaining());
+		
 		if (CurrentItem->WasCollected()) //TODO: add an or condition for if item is full
 		{
-			if (CurrentItem->GetWorldTimerManager().GetTimerElapsed(FadeTextTimer) == -1.0f && CurrentItem->GetWorldTimerManager().GetTimerRemaining(FadeTextTimer) == -1.0f)
-			{
-				if (SuccessColor.A >= 0)
-				{
-					SuccessColor.A -= 0.1f;
-				}
-			}
-			if (TimerState == 0)
-			{
-				TimerState = 1;
-				CurrentItem->GetWorldTimerManager().SetTimer(FadeTextTimer, 3.0f, false);
-			}
-			PickUpSuccessAnimation(CurrentItem);
-			UE_LOG(LogTemp, Warning, TEXT("Time elapsed: %f"), CurrentItem->GetWorldTimerManager().GetTimerElapsed(FadeTextTimer));
-			UE_LOG(LogTemp, Warning, TEXT("Time remaining: %f"), CurrentItem->GetWorldTimerManager().GetTimerRemaining(FadeTextTimer));
+			//UE_LOG(LogTemp, Warning, TEXT("Is No Collision Timer Active? "), CurrentItem->GetWorldTimerManager().IsTimerActive(*(CurrentItem->GetNoCollisionTimer())) ? TEXT("Yes") : TEXT("No"));
 			
+			UIText * SuccessText = new UIText(CurrentItem, (FVector2D)AHUD::Project(CurrentItem->GetActorLocation()), CurrentItem->GetItemName(), JLog, FLinearColor(1.0f, 1.0f, 1.0f));
+			SuccessText->SetExternalActorLocation(CurrentItem->GetActorLocation());
+            //CurrentItem->SetNoCollisionTimer(3.0f);
+			//SetDisplayFailText(CurrentItem);
+			//Canvas->DrawItem(*CurrentItem->GetDisplayFailText());
+			TextArray.Add(SuccessText);
+
+			SuccessText->SetDisplayTimer(3.0f);
+			
+		
+			//Destroy the actor from the scene
+			CurrentItem->Destroy();
 		}
 
+
+
+		 
 	}
 
+	//TODO: Create a list of UIText that only keeps track of texts that are currently going to or are being drawn
+	for (int i = TextArray.Num() - 1; i >= 0; --i )
+	{
+		
+		TextArray[i]->GetDisplayText()->Position = (FVector2D)AHUD::Project(TextArray[i]->GetExternalActorLocation());
+		Canvas->DrawItem(*(TextArray[i]->GetDisplayText()));
+
+		//check if display timer has finished
+		if (TextArray[i]->GetDisplayTimer()->IsValid())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Display Time elapsed: %f"), TextArray[i]->GetDisplayTimerElapsed());
+			UE_LOG(LogTemp, Warning, TEXT("Display Time remaining: %f"), TextArray[i]->GetDisplayTimerRemaining());
+			if (TextArray[i]->GetDisplayTimerElapsed() == -1.0f && TextArray[i]->GetDisplayTimerRemaining() == -1.0f)
+			{
+				TextArray[i]->SetFadeTimer(0.5f);
+				TextArray[i]->GetDisplayTimer()->Invalidate();
+
+				
+
+
+			}
+		}
+		if (TextArray[i]->GetFadeTimer()->IsValid())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Fade Time elapsed: %f"), TextArray[i]->GetFadeTimerElapsed());
+			UE_LOG(LogTemp, Warning, TEXT("Fade Time remaining: %f"), TextArray[i]->GetFadeTimerRemaining());
+			if ((TextArray[i]->GetOpacity() >= 0.0f) && !(TextArray[i]->GetFadeTimerElapsed() == -1.0f && TextArray[i]->GetFadeTimerRemaining() == -1.0f))
+			{
+				TextArray[i]->SetOpacity(TextArray[i]->GetOpacity() - 0.1f);
+			}
+
+			if (TextArray[i]->GetFadeTimerElapsed() == -1.0f && TextArray[i]->GetFadeTimerRemaining() == -1.0f)
+			{
+				TextArray.RemoveAt(i);
+				
+			}
+		}
+	}
 	
+	
+
 }
 
 void AItemTextHUD::PostInitializeComponents()
