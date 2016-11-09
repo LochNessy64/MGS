@@ -65,40 +65,40 @@ void AItemTextHUD::DrawHUD()
 	}
 
 	//TODO: Create a list of UIText that only keeps track of texts that are currently going to or are being drawn
-	for (auto& TextItr : TextArray)
+	for (int i = TextArray.Num() - 1; i >= 0; --i )
 	{
 		
-		TextItr->GetDisplayText()->Position = (FVector2D)AHUD::Project(TextItr->GetExternalActorLocation());
-		Canvas->DrawItem(*(TextItr->GetDisplayText()));
+		TextArray[i]->GetDisplayText()->Position = (FVector2D)AHUD::Project(TextArray[i]->GetExternalActorLocation());
+		Canvas->DrawItem(*(TextArray[i]->GetDisplayText()));
 
 		//check if display timer has finished
-		if (TextItr->GetDisplayTimer()->IsValid())
+		if (TextArray[i]->GetDisplayTimer()->IsValid())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Display Time elapsed: %f"), TextItr->GetDisplayTimerElapsed());
-			UE_LOG(LogTemp, Warning, TEXT("Display Time remaining: %f"), TextItr->GetDisplayTimerRemaining());
-			if (TextItr->GetDisplayTimerElapsed() == -1.0f && TextItr->GetDisplayTimerRemaining() == -1.0f)
+			UE_LOG(LogTemp, Warning, TEXT("Display Time elapsed: %f"), TextArray[i]->GetDisplayTimerElapsed());
+			UE_LOG(LogTemp, Warning, TEXT("Display Time remaining: %f"), TextArray[i]->GetDisplayTimerRemaining());
+			if (TextArray[i]->GetDisplayTimerElapsed() == -1.0f && TextArray[i]->GetDisplayTimerRemaining() == -1.0f)
 			{
-				TextItr->SetFadeTimer(0.5f);
-				TextItr->GetDisplayTimer()->Invalidate();
+				TextArray[i]->SetFadeTimer(0.5f);
+				TextArray[i]->GetDisplayTimer()->Invalidate();
 
 				
 
 
 			}
 		}
-		if (TextItr->GetFadeTimer()->IsValid())
+		if (TextArray[i]->GetFadeTimer()->IsValid())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Fade Time elapsed: %f"), TextItr->GetFadeTimerElapsed());
-			UE_LOG(LogTemp, Warning, TEXT("Fade Time remaining: %f"), TextItr->GetFadeTimerRemaining());
-			if ((TextItr->GetOpacity() >= 0.0f) && !(TextItr->GetFadeTimerElapsed() == -1.0f && TextItr->GetFadeTimerRemaining() == -1.0f))
+			UE_LOG(LogTemp, Warning, TEXT("Fade Time elapsed: %f"), TextArray[i]->GetFadeTimerElapsed());
+			UE_LOG(LogTemp, Warning, TEXT("Fade Time remaining: %f"), TextArray[i]->GetFadeTimerRemaining());
+			if ((TextArray[i]->GetOpacity() >= 0.0f) && !(TextArray[i]->GetFadeTimerElapsed() == -1.0f && TextArray[i]->GetFadeTimerRemaining() == -1.0f))
 			{
-				TextItr->SetOpacity(TextItr->GetOpacity() - 0.1f);
+				TextArray[i]->SetOpacity(TextArray[i]->GetOpacity() - 0.1f);
 			}
 
-			if (TextItr->GetFadeTimerElapsed() == -1.0f && TextItr->GetFadeTimerRemaining() == -1.0f)
+			if (TextArray[i]->GetFadeTimerElapsed() == -1.0f && TextArray[i]->GetFadeTimerRemaining() == -1.0f)
 			{
-				//TextArray.RemoveAt(TextArray.)
-				//TextItr->~UIText();
+				TextArray.RemoveAt(i);
+				
 			}
 		}
 	}
