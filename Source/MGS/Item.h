@@ -100,7 +100,7 @@ public:
 
 	void IdleAnimation(float DeltaSeconds);
 
-	void CantCollectAnimation();
+	void CantCollectAnimation(float DeltaSeconds);
 
 	/** called when something enters the sphere component*/
 	UFUNCTION()
@@ -127,4 +127,16 @@ protected:
 	void SetNameVisibility(bool NewNameVisibility);
 
 	FTimerHandle *NoCollisionTimer;
+
+	UPROPERTY()
+		bool bIsFailCollectionAnimationPlaying;
+
+	UPROPERTY()
+		float TriggerSphereRadius;
+
+	UPROPERTY()
+		FVector OriginalLocation;
+
+	UPROPERTY()
+		TArray<FVector> BoundingVectors;
 };

@@ -17,6 +17,10 @@ AItem::AItem()
 	
 	bWasCollected = false;
 
+	
+
+	bIsFailCollectionAnimationPlaying = false;
+
 	PickupSound = LoadObject<USoundWave>(NULL, TEXT("/Game/Audio/0x0CUnreal.0x0CUnreal"), NULL, LOAD_None, NULL);
 	bIsActive = false;
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Mesh"));
@@ -26,6 +30,7 @@ AItem::AItem()
 
 
 	ItemMesh->SetCollisionProfileName("OverlapAllDynamic");
+
 	UE_LOG(LogTemp, Warning, TEXT("Current ItemMesh collision preset: %s"), *(ItemMesh->GetCollisionProfileName().ToString()));
 	UE_LOG(LogTemp, Warning, TEXT("Current Actor collision enabled: %s"), this->GetActorEnableCollision() ? TEXT("true") : TEXT("false"));
 	//this->
@@ -46,6 +51,10 @@ AItem::AItem()
 	TriggerSphere->bGenerateOverlapEvents = true;
 	TriggerSphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnOverlapBegin);
 
+	TriggerSphereRadius = TriggerSphere->GetScaledSphereRadius() ;
+	
+	
+	
 }
 
 void AItem::BeginPlay()
@@ -59,9 +68,9 @@ void AItem::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 	
 	IdleAnimation(DeltaSeconds);
-	if (bIsActive)
+	if (bIsFailCollectionAnimationPlaying)
 	{
-		
+		CantCollectAnimation(DeltaSeconds);
 	}
 }
 
@@ -167,9 +176,16 @@ void AItem::IdleAnimation(float DeltaSeconds)
 
 }
 
-void AItem::CantCollectAnimation()
+void AItem::CantCollectAnimation(float DeltaSeconds)
 {
+	if ( fmod(DeltaSeconds, 0.001) == 0)
+	{
+		SetActorLocation(BoundingVectors[FMath::RandRange(0, BoundingVectors.Num() - 1)]);
+	}
 
+	
+	UE_LOG(LogTemp, Warning, TEXT("DeltaSeconds: %f"), DeltaSeconds);
+	
 }
 
 
@@ -177,10 +193,18 @@ void AItem::CantCollectAnimation()
 void AItem::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Beginning Overlap"));
+	OriginalLocation = GetActorLocation();
+	UE_LOG(LogTemp, Warning, TEXT("Original Location: %f"), OriginalLocation.X);
 	//TODO: Add logic to check if user inventory is full
-
-	CollectItem();
-	
+	bIsFailCollectionAnimationPlaying = true;
+//	CollectItem();
+	if (BoundingVectors.Num() == 0)
+	{
+		BoundingVectors.Push(FVector(OriginalLocation.X + TriggerSphereRadius, OriginalLocation.Y, OriginalLocation.Z));
+		BoundingVectors.Push(FVector(OriginalLocation.X - TriggerSphereRadius, OriginalLocation.Y, OriginalLocation.Z));
+		BoundingVectors.Push(FVector(OriginalLocation.X, OriginalLocation.Y + TriggerSphereRadius, OriginalLocation.Z));
+		BoundingVectors.Push(FVector(OriginalLocation.X, OriginalLocation.Y - TriggerSphereRadius, OriginalLocation.Z));
+	}
 }
 
 void AItem::CollectItem()
