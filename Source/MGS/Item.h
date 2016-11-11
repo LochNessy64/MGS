@@ -84,6 +84,8 @@ public:
 
 	void SetCollected(bool NewCollectState);
 
+	bool DidItemPickupFail();
+
 	FText GetItemName();
 
 	void SetItemName(FText NewName);
@@ -118,6 +120,14 @@ public:
 	float GetNoCollisionTimerElapsed();
 	
 	float GetNoCollisionTimerRemaining();
+
+	void SetPickupFailTimer(float Duration);
+
+	FTimerHandle* GetPickupFailTimer();
+
+	float GetPickupFailTimerElapsed();
+
+	float GetPickupFailTimerRemaining();
 protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Item Properties")
@@ -128,8 +138,10 @@ protected:
 
 	FTimerHandle *NoCollisionTimer;
 
+	FTimerHandle *PickupFailTimer;
+
 	UPROPERTY()
-		bool bIsFailCollectionAnimationPlaying;
+		bool bDidItemPickupFail;
 
 	UPROPERTY()
 		float TriggerSphereRadius;
@@ -139,4 +151,6 @@ protected:
 
 	UPROPERTY()
 		TArray<FVector> BoundingVectors;
+
+	void SwitchCollision();
 };
