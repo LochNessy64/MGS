@@ -107,6 +107,10 @@ public:
 	/** called when something enters the sphere component*/
 	UFUNCTION()
 		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	
+	TScriptDelegate<FWeakObjectPtr> EndDelegate;
+	UFUNCTION()
+		void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent *OtherComp, int32 OtherBodyIndex);
 
 	void CollectItem();
 
@@ -128,6 +132,10 @@ public:
 	float GetPickupFailTimerElapsed();
 
 	float GetPickupFailTimerRemaining();
+
+	bool GetIsDisplayTextSet();
+
+	void SetIsDisplayTextSet(bool NewState);
 protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Item Properties")
@@ -153,4 +161,7 @@ protected:
 		TArray<FVector> BoundingVectors;
 
 	void SwitchCollision();
+
+	UPROPERTY()
+		bool bIsDisplayTextSet;
 };

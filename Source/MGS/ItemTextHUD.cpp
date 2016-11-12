@@ -59,8 +59,14 @@ void AItemTextHUD::DrawHUD()
 			CurrentItem->Destroy();
 		}
 
-
-
+		if (CurrentItem->DidItemPickupFail() && !CurrentItem->GetIsDisplayTextSet())
+		{
+			UIText * FailText = new UIText(CurrentItem, (FVector2D)AHUD::Project(CurrentItem->GetActorLocation()), CurrentItem->GetItemName(), JLog, FLinearColor(1.0f, 0.0f, 0.0f));
+			FailText->SetExternalActorLocation(CurrentItem->GetActorLocation());
+			TextArray.Add(FailText);
+			FailText->SetDisplayTimer(3.0f);
+			CurrentItem->SetIsDisplayTextSet(true);
+		}
 		 
 	}
 
