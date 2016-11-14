@@ -84,6 +84,8 @@ public:
 
 	void SetCollected(bool NewCollectState);
 
+	bool DidItemPickupFail();
+
 	FText GetItemName();
 
 	void SetItemName(FText NewName);
@@ -100,11 +102,15 @@ public:
 
 	void IdleAnimation(float DeltaSeconds);
 
-	void CantCollectAnimation();
+	void CantCollectAnimation(float DeltaSeconds);
 
 	/** called when something enters the sphere component*/
 	UFUNCTION()
 		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	
+	TScriptDelegate<FWeakObjectPtr> EndDelegate;
+	UFUNCTION()
+		void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent *OtherComp, int32 OtherBodyIndex);
 
 	void CollectItem();
 
@@ -118,6 +124,20 @@ public:
 	float GetNoCollisionTimerElapsed();
 	
 	float GetNoCollisionTimerRemaining();
+
+	void SetPickupFailTimer(float Duration);
+
+	FTimerHandle* GetPickupFailTimer();
+
+	float GetPickupFailTimerElapsed();
+
+	float GetPickupFailTimerRemaining();
+
+	bool GetIsDisplayTextSet();
+
+	void SetIsDisplayTextSet(bool NewState);
+
+	FVector GetOriginalLocation();
 protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Item Properties")
@@ -127,4 +147,23 @@ protected:
 	void SetNameVisibility(bool NewNameVisibility);
 
 	FTimerHandle *NoCollisionTimer;
+
+	FTimerHandle *PickupFailTimer;
+
+	UPROPERTY()
+		bool bDidItemPickupFail;
+
+	UPROPERTY()
+		float TriggerSphereRadius;
+
+	UPROPERTY()
+		FVector OriginalLocation;
+
+	UPROPERTY()
+		TArray<FVector> BoundingVectors;
+
+	void SwitchCollision();
+
+	UPROPERTY()
+		bool bIsDisplayTextSet;
 };

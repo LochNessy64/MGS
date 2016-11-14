@@ -15,7 +15,13 @@ AItem::AItem()
 	
 	NoCollisionTimer = new FTimerHandle();
 	
+	PickupFailTimer = new FTimerHandle();
+
 	bWasCollected = false;
+
+	bIsDisplayTextSet = false;
+
+	bDidItemPickupFail = false;
 
 	PickupSound = LoadObject<USoundWave>(NULL, TEXT("/Game/Audio/0x0CUnreal.0x0CUnreal"), NULL, LOAD_None, NULL);
 	bIsActive = false;
@@ -26,6 +32,7 @@ AItem::AItem()
 
 
 	ItemMesh->SetCollisionProfileName("OverlapAllDynamic");
+
 	UE_LOG(LogTemp, Warning, TEXT("Current ItemMesh collision preset: %s"), *(ItemMesh->GetCollisionProfileName().ToString()));
 	UE_LOG(LogTemp, Warning, TEXT("Current Actor collision enabled: %s"), this->GetActorEnableCollision() ? TEXT("true") : TEXT("false"));
 	//this->
@@ -45,7 +52,13 @@ AItem::AItem()
 	TurnRate = FRotator(0.0f, 0.0f, 180.0f);
 	TriggerSphere->bGenerateOverlapEvents = true;
 	TriggerSphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnOverlapBegin);
-
+	//TriggerSphere->OnComponentEndOverlap.AddDynamic(this, &AItem::OnOverlapEnd);
+	EndDelegate.BindUFunction(this, FName("OnOverlapEnd"));
+	OnActorEndOverlap.Add( EndDelegate);
+	TriggerSphereRadius = TriggerSphere->GetScaledSphereRadius() ;
+	
+	
+	
 }
 
 void AItem::BeginPlay()
@@ -59,10 +72,24 @@ void AItem::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 	
 	IdleAnimation(DeltaSeconds);
-	if (bIsActive)
+	if (bDidItemPickupFail)
 	{
+		if (GetPickupFailTimer()->IsValid())
+		{
+			CantCollectAnimation(DeltaSeconds);
+			if (GetPickupFailTimerElapsed() == -1.0f && GetPickupFailTimerRemaining() == -1.0f)
+			{
+				bDidItemPickupFail = false;
+				GetPickupFailTimer()->Invalidate();
+				SetActorLocation(OriginalLocation);
+				//bIsDisplayTextSet = false;
+			}
+		}
 		
+
 	}
+	
+	
 }
 
 void AItem::Init(FString ItemName, EItemType TypeOfItem)
@@ -123,6 +150,11 @@ void AItem::SetCollected(bool NewCollectState)
 	bWasCollected = NewCollectState;
 }
 
+bool AItem::DidItemPickupFail()
+{
+	return bDidItemPickupFail;
+}
+
 FText AItem::GetItemName()
 {
 	return ItemName;
@@ -167,8 +199,10 @@ void AItem::IdleAnimation(float DeltaSeconds)
 
 }
 
-void AItem::CantCollectAnimation()
+void AItem::CantCollectAnimation(float DeltaSeconds)
 {
+	SetActorLocation(FMath::Lerp(GetActorLocation(), BoundingVectors[FMath::RandRange(0, BoundingVectors.Num() - 1)], 0.5f));
+	//UE_LOG(LogTemp, Warning, TEXT("DeltaSeconds: %f"), DeltaSeconds);
 
 }
 
@@ -176,22 +210,80 @@ void AItem::CantCollectAnimation()
 
 void AItem::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Beginning Overlap"));
-	//TODO: Add logic to check if user inventory is full
+	if (Cast<ACharacter>(OtherActor))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Beginning Overlap"));
+		OriginalLocation = GetActorLocation();
+		UE_LOG(LogTemp, Warning, TEXT("Original Location: %f"), OriginalLocation.X);
+		//TODO: Add logic to check if user inventory is full
+		//If inventory full, play full animation
+		
+		if (!bDidItemPickupFail)
+		{
+			SwitchCollision();
 
-	CollectItem();
-	
+			if (!GetNoCollisionTimer()->IsValid())
+			{
+				GetWorldTimerManager().ValidateHandle(*NoCollisionTimer);
+			}
+
+			SetNoCollisionTimer(3.0f);
+
+			if (!GetPickupFailTimer()->IsValid())
+			{
+				GetWorldTimerManager().ValidateHandle(*PickupFailTimer);
+			}
+			SetPickupFailTimer(0.5f);
+
+			if (BoundingVectors.Num() == 0)
+			{
+				BoundingVectors.Push(FVector(OriginalLocation.X + TriggerSphereRadius / 4, OriginalLocation.Y, OriginalLocation.Z));
+				BoundingVectors.Push(FVector(OriginalLocation.X - TriggerSphereRadius / 4, OriginalLocation.Y, OriginalLocation.Z));
+				BoundingVectors.Push(FVector(OriginalLocation.X, OriginalLocation.Y + TriggerSphereRadius / 4, OriginalLocation.Z));
+				BoundingVectors.Push(FVector(OriginalLocation.X, OriginalLocation.Y - TriggerSphereRadius / 4, OriginalLocation.Z));
+			}
+
+
+			bDidItemPickupFail = true;
+		}
+		//else collect item
+	//	CollectItem();
+	}
+}
+
+void AItem::SwitchCollision()
+{
+	//this->SetActorEnableCollision(!GetActorEnableCollision());
+	//ItemMesh->bGenerateOverlapEvents = !(ItemMesh->bGenerateOverlapEvents);
+	//TriggerSphere->bGenerateOverlapEvents = !TriggerSphere->bGenerateOverlapEvents;
+}
+
+void AItem::OnOverlapEnd(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
+{
+	UE_LOG(LogTemp, Warning, TEXT("End Overlap"));
+	if (Cast<ACharacter>(OtherActor))
+	{
+
+		if (GetNoCollisionTimerElapsed() == -1.0f && GetNoCollisionTimerRemaining() == -1.0f)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Switching collision because player went outside bounds"));
+			//SwitchCollision();
+
+		}
+	}
 }
 
 void AItem::CollectItem()
 {
+	
 	bWasCollected = true;
-	this->SetActorEnableCollision(false);
-	ItemMesh->bGenerateOverlapEvents = false;
-	ItemMesh->SetHiddenInGame(true);
-
+	//this 'paragraph' will probably need to move to it's own function
+	ItemMesh->SetHiddenInGame(!(ItemMesh->bHiddenInGame));
+	this->SetActorEnableCollision(!GetActorEnableCollision());
+	ItemMesh->bGenerateOverlapEvents = !(ItemMesh->bGenerateOverlapEvents);
+	TriggerSphere->bGenerateOverlapEvents = !TriggerSphere->bGenerateOverlapEvents;
 	//SetActorHiddenInGame(true);
-	TriggerSphere->bGenerateOverlapEvents = false;
+	
 	TriggerSphere->bHiddenInGame = true;
 	SetActorTickEnabled(false);
 	UGameplayStatics::PlaySound2D(GetWorld(), PickupSound);
@@ -219,6 +311,41 @@ float AItem::GetNoCollisionTimerElapsed()
 float AItem::GetNoCollisionTimerRemaining()
 {
 	return GetWorldTimerManager().GetTimerRemaining(*NoCollisionTimer);
+}
+
+void AItem::SetPickupFailTimer(float Duration)
+{
+	GetWorldTimerManager().SetTimer(*PickupFailTimer, Duration, false);
+}
+
+FTimerHandle * AItem::GetPickupFailTimer()
+{
+	return PickupFailTimer;
+}
+
+float AItem::GetPickupFailTimerElapsed()
+{
+	return GetWorldTimerManager().GetTimerElapsed(*PickupFailTimer);
+}
+
+float AItem::GetPickupFailTimerRemaining()
+{
+	return GetWorldTimerManager().GetTimerRemaining(*PickupFailTimer);
+}
+
+bool AItem::GetIsDisplayTextSet()
+{
+	return bIsDisplayTextSet;
+}
+
+void AItem::SetIsDisplayTextSet(bool NewState)
+{
+	bIsDisplayTextSet = NewState;
+}
+
+FVector AItem::GetOriginalLocation()
+{
+	return OriginalLocation;
 }
 
 

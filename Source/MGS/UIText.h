@@ -5,11 +5,15 @@
 /**
  * 
  */
+
+
+enum class UITextClassType : uint8 {Base, Success, Fail};
+
 class MGS_API UIText
 {
 public:
 	UIText(AActor *Actor, FVector2D NewScreenPos, FText TextToDisplay, UFont *NewFont, FLinearColor NewColor);
-	~UIText();
+	virtual ~UIText();
 
 	void SetColor(FLinearColor NewColor);
 
@@ -57,11 +61,11 @@ public:
 
 	FCanvasTextItem* GetDisplayText();
 
-	void SetExternalActorLocation(FVector NewLocation);
 
-	FVector GetExternalActorLocation();
 
 	FTimerManager* GetTimerManager();
+
+	virtual UITextClassType GetClassType();
 
 private:
 	FCanvasTextItem *DisplayText;
@@ -86,6 +90,7 @@ private:
 
 	FText Text;
 
-	FVector ExternalActorLocation;
+protected:
+	
 
 };

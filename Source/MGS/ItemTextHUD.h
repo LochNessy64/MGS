@@ -5,6 +5,8 @@
 #include "GameFramework/HUD.h"
 #include "Item.h"
 #include "UIText.h"
+#include "SuccessUIText.h"
+#include "FailUIText.h"
 #include "ItemTextHUD.generated.h"
 
 /**
@@ -22,13 +24,19 @@ private:
 
 	UPROPERTY()
 		bool IsTextDisplayed;
+
+		void DisplayItemText();
 	
 protected:
 	virtual void DrawHUD() override;
 
 	virtual void PostInitializeComponents() override;
 
-	TArray<UIText*> TextArray;
+	//TArray<SuccessUIText*> *SuccessTextArray;
+
+	//TArray<FailUIText*> *FailTextArray;
+
+	TArray<UIText *> TextArray;
 
 public:
 
