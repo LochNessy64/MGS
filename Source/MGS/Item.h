@@ -136,6 +136,8 @@ public:
 	bool GetIsDisplayTextSet();
 
 	void SetIsDisplayTextSet(bool NewState);
+
+	FVector GetOriginalLocation();
 protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Item Properties")

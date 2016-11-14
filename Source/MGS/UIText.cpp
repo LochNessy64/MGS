@@ -155,18 +155,15 @@ void UIText::SetDisplayTimerDuration(float NewDuration)
 	DisplayTimerDuration = NewDuration;
 }
 
-void UIText::SetExternalActorLocation(FVector NewLocation)
-{
-	ExternalActorLocation = NewLocation;
-}
 
-FVector UIText::GetExternalActorLocation()
-{
-	return ExternalActorLocation;
-}
 
 FTimerManager* UIText::GetTimerManager()
 {
 	return TimerManager;
+}
+
+UITextClassType UIText::GetClassType()
+{
+	return UITextClassType::Base;
 }
 

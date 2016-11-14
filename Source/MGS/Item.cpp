@@ -55,7 +55,7 @@ AItem::AItem()
 	//TriggerSphere->OnComponentEndOverlap.AddDynamic(this, &AItem::OnOverlapEnd);
 	EndDelegate.BindUFunction(this, FName("OnOverlapEnd"));
 	OnActorEndOverlap.Add( EndDelegate);
-	TriggerSphereRadius = TriggerSphere->GetScaledSphereRadius() /4;
+	TriggerSphereRadius = TriggerSphere->GetScaledSphereRadius() ;
 	
 	
 	
@@ -81,7 +81,8 @@ void AItem::Tick(float DeltaSeconds)
 			{
 				bDidItemPickupFail = false;
 				GetPickupFailTimer()->Invalidate();
-				
+				SetActorLocation(OriginalLocation);
+				//bIsDisplayTextSet = false;
 			}
 		}
 		
@@ -216,29 +217,34 @@ void AItem::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherA
 		UE_LOG(LogTemp, Warning, TEXT("Original Location: %f"), OriginalLocation.X);
 		//TODO: Add logic to check if user inventory is full
 		//If inventory full, play full animation
-		bDidItemPickupFail = true;
-
-		SwitchCollision();
-
-		if (!GetNoCollisionTimer()->IsValid())
+		
+		if (!bDidItemPickupFail)
 		{
-			GetWorldTimerManager().ValidateHandle(*NoCollisionTimer);
-		}
+			SwitchCollision();
 
-		SetNoCollisionTimer(3.0f);
+			if (!GetNoCollisionTimer()->IsValid())
+			{
+				GetWorldTimerManager().ValidateHandle(*NoCollisionTimer);
+			}
 
-		if (!GetPickupFailTimer()->IsValid())
-		{
-			GetWorldTimerManager().ValidateHandle(*PickupFailTimer);
-		}
-		SetPickupFailTimer(0.5f);
+			SetNoCollisionTimer(3.0f);
 
-		if (BoundingVectors.Num() == 0)
-		{
-			BoundingVectors.Push(FVector(OriginalLocation.X + TriggerSphereRadius, OriginalLocation.Y, OriginalLocation.Z));
-			BoundingVectors.Push(FVector(OriginalLocation.X - TriggerSphereRadius, OriginalLocation.Y, OriginalLocation.Z));
-			BoundingVectors.Push(FVector(OriginalLocation.X, OriginalLocation.Y + TriggerSphereRadius, OriginalLocation.Z));
-			BoundingVectors.Push(FVector(OriginalLocation.X, OriginalLocation.Y - TriggerSphereRadius, OriginalLocation.Z));
+			if (!GetPickupFailTimer()->IsValid())
+			{
+				GetWorldTimerManager().ValidateHandle(*PickupFailTimer);
+			}
+			SetPickupFailTimer(0.5f);
+
+			if (BoundingVectors.Num() == 0)
+			{
+				BoundingVectors.Push(FVector(OriginalLocation.X + TriggerSphereRadius / 4, OriginalLocation.Y, OriginalLocation.Z));
+				BoundingVectors.Push(FVector(OriginalLocation.X - TriggerSphereRadius / 4, OriginalLocation.Y, OriginalLocation.Z));
+				BoundingVectors.Push(FVector(OriginalLocation.X, OriginalLocation.Y + TriggerSphereRadius / 4, OriginalLocation.Z));
+				BoundingVectors.Push(FVector(OriginalLocation.X, OriginalLocation.Y - TriggerSphereRadius / 4, OriginalLocation.Z));
+			}
+
+
+			bDidItemPickupFail = true;
 		}
 		//else collect item
 	//	CollectItem();
@@ -261,7 +267,8 @@ void AItem::OnOverlapEnd(UPrimitiveComponent * OverlappedComp, AActor * OtherAct
 		if (GetNoCollisionTimerElapsed() == -1.0f && GetNoCollisionTimerRemaining() == -1.0f)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Switching collision because player went outside bounds"));
-			SwitchCollision();
+			//SwitchCollision();
+
 		}
 	}
 }
@@ -334,6 +341,11 @@ bool AItem::GetIsDisplayTextSet()
 void AItem::SetIsDisplayTextSet(bool NewState)
 {
 	bIsDisplayTextSet = NewState;
+}
+
+FVector AItem::GetOriginalLocation()
+{
+	return OriginalLocation;
 }
 
 
