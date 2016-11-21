@@ -3,20 +3,19 @@
 #pragma once
 
 
+
 /**
  * The HUD representation of a collection of pickup items
  */
 
-enum class EItemType;
-enum class EItemLeathality;
+enum class EItemType: uint8;
+enum class EItemLeathality : uint8;
 
 class MGS_API UIItem
 {
 
 private:
-	uint32 MaxCount;
-	uint32 CurrentCount;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Item Properties", meta = (AllowPrivateAccess = "true"))
 		EItemType Type;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Item Properties", meta = (AllowPrivateAccess = "true"))
@@ -24,9 +23,18 @@ private:
 
 
 protected:
+
+	UPROPERTY()
+	uint32 MaxCount;
+	UPROPERTY()
+	uint32 CurrentCount;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI Item Properties", meta = (AllowPrivateAccess = "true"))
 		bool bIsNameVisible;
 
+	UPROPERTY(EditAnywhere, Category = "UI Item Properties")
+		UTexture2D *UIItemTexture;
+	//To be moved to a derived class for firearms
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI Item Properties", meta = (AllowPrivateAccess = "true"))
 		bool bAreBulletsVisible;
 
@@ -35,7 +43,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Item Properties", Meta = (AllowPrivateAccess = "true"))
 		bool bIsVisible;
-
+	//To be moved to a derived class for firearms
 	UFUNCTION(BlueprintCallable, Category = "UI Item Properties")
 		void SetBulletVisibility(bool NewBulletVisibility);
 
@@ -45,6 +53,8 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "UI Item Properties")
 		void SetNameVisibility(bool NewNameVisibility);
 
+	UPROPERTY(EditAnywhere, Category = "UI Item Properties")
+		FString UIItemName;
 public:
 	UIItem();
 	~UIItem();

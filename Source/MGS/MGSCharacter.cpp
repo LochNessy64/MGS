@@ -7,9 +7,13 @@
 //////////////////////////////////////////////////////////////////////////
 // AMGSCharacter
 
+#define MAX_INVENTORY_ITEMS 4
+
 void AMGSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Inventory.SetNum(MAX_INVENTORY_ITEMS);
 	if (InventoryUIClass)
 	{
 		if (!InventoryWidget)

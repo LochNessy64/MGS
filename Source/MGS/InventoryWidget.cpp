@@ -1,0 +1,11 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#include "MGS.h"
+#include "InventoryWidget.h"
+
+
+void UInventoryWidget::Show()
+{
+
+}
+
