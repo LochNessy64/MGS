@@ -24,9 +24,15 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = UI)
 		void Hide();
 
+
 	/*Stores a reference in order to bind info on inventory slots*/
 	
  		TArray<UIItem *> ItemsArray;
+
+		TArray<UWidget *> SlotWidgets;
+
+private:
+
 	
 	
 };

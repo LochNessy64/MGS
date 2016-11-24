@@ -29,6 +29,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
+	/*Handles the Inventory Input by sending information to the controller*/
+	UFUNCTION()
+			void HandleInventoryInput();
+	TArray<UIItem *> Inventory;
 protected:
 
 	/** Called for forwards/backward input */
@@ -71,7 +75,7 @@ protected:
 
 	float InvKeyHoldTime;
 
-	TArray<UIItem *> Inventory;
+	
 
 protected:
 	// APawn interface
