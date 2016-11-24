@@ -1,6 +1,7 @@
 // Copyright 1998-2016 Epic Games, Inc. All Rights Reserved.
 #pragma once
 #include "GameFramework/Character.h"
+#include "UIItem.h"
 #include "MGSCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -28,6 +29,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
+	/*Handles the Inventory Input by sending information to the controller*/
+	UFUNCTION()
+			void HandleInventoryInput();
+	TArray<UIItem *> Inventory;
 protected:
 
 	/** Called for forwards/backward input */
@@ -69,6 +74,8 @@ protected:
 	bool bShowingInventory;
 
 	float InvKeyHoldTime;
+
+	
 
 protected:
 	// APawn interface

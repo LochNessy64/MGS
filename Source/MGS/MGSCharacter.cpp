@@ -2,14 +2,19 @@
 
 #include "MGS.h"
 #include "InventoryUserWidget.h"
+#include "MyPlayerController.h"
 #include "MGSCharacter.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMGSCharacter
 
+#define MAX_INVENTORY_ITEMS 4
+
 void AMGSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Inventory.SetNum(MAX_INVENTORY_ITEMS);
 	if (InventoryUIClass)
 	{
 		if (!InventoryWidget)
@@ -87,6 +92,7 @@ void AMGSCharacter::SetupPlayerInputComponent(class UInputComponent* InputCompon
 	// handle touch devices
 	InputComponent->BindTouch(IE_Pressed, this, &AMGSCharacter::TouchStarted);
 	InputComponent->BindTouch(IE_Released, this, &AMGSCharacter::TouchStopped);
+	InputComponent->BindAction("Inventory", IE_Pressed, this, &AMGSCharacter::HandleInventoryInput);
 }
 
 
@@ -117,6 +123,16 @@ void AMGSCharacter::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+}
+
+void AMGSCharacter::HandleInventoryInput()
+{
+	AMyPlayerController *Con = Cast<AMyPlayerController>(GetController());
+	if (Con)
+	{
+		Con->HandleInventoryInput();
+	}
+
 }
 
 void AMGSCharacter::MoveForward(float Value)
