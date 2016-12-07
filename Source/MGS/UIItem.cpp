@@ -7,6 +7,8 @@ UIItem::UIItem()
 {
 	bAreBulletsVisible = false;
 	bIsSelected = false;
+
+	//UITexture = CreateDefaultSubobject<UTexture2D>(FName("ItemTexture"));
 }
 
 bool UIItem::CheckIfBulletsVisible()

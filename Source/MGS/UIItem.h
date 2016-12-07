@@ -24,6 +24,9 @@ private:
 
 protected:
 
+	UPROPERTY(EditAnywhere, Category = "UI Item Properties")
+		UTexture2D *UITexture;
+
 	UPROPERTY()
 	uint32 MaxCount;
 	UPROPERTY()
@@ -55,6 +58,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "UI Item Properties")
 		FString UIItemName;
+
+
 public:
 	UIItem();
 	~UIItem();
@@ -67,4 +72,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "UI Item Properties")
 		bool CheckIfNameVisible();
+
+	/*Return the texture of the UI Item*/
+	FORCEINLINE UTexture2D *GetUIItemTexture() { return UITexture; }
 };
