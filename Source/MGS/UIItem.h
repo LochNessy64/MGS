@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
-
+#include "Item.h"
+#include "UIItem.generated.h"
 
 /**
  * The HUD representation of a collection of pickup items
@@ -11,8 +11,10 @@
 enum class EItemType: uint8;
 enum class EItemLeathality : uint8;
 
-class MGS_API UIItem
+UCLASS(Blueprintable)
+class MGS_API UIItem : public UObject
 {
+	GENERATED_BODY()
 
 private:
 	
@@ -24,8 +26,8 @@ private:
 
 protected:
 
-	UPROPERTY(EditAnywhere, Category = "UI Item Properties")
-		UTexture2D *UITexture;
+	UPROPERTY()
+		bool bIsCountVisible;
 
 	UPROPERTY()
 	uint32 MaxCount;
@@ -59,6 +61,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "UI Item Properties")
 		FString UIItemName;
 
+	UPROPERTY(EditAnywhere, Category = "UI Item Properties")
+		FString UIToolTip;
 
 public:
 	UIItem();
@@ -74,5 +78,5 @@ public:
 		bool CheckIfNameVisible();
 
 	/*Return the texture of the UI Item*/
-	FORCEINLINE UTexture2D *GetUIItemTexture() { return UITexture; }
+	FORCEINLINE UTexture2D *GetUIItemTexture() { return UIItemTexture; }
 };

@@ -16,10 +16,30 @@ bool UIItem::CheckIfBulletsVisible()
 	return false;
 }
 
+bool UIItem::CheckIfNameVisible()
+{
+	return bIsNameVisible;
+}
+
 void UIItem::SetBulletVisibility(bool NewBulletVisibility)
 {
 }
 
+void UIItem::SetItemType(EItemType IType)
+{
+	Type = IType;
+}
+
+void UIItem::SetNameVisibility(bool NewNameVisibility)
+{
+	bIsNameVisible = NewNameVisibility;
+}
+
 UIItem::~UIItem()
 {
+}
+
+EItemType UIItem::GetItemType()
+{
+	return Type;
 }

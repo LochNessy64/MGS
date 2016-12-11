@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Blueprint/UserWidget.h"
+#include "UIItem.h"
 #include "InventorySlotWidget.generated.h"
 
 /**
@@ -21,6 +22,14 @@ protected:
 	/*Tells the player to equip the represented item from this widget*/
 	UFUNCTION(BlueprintCallable, Category = UI)
 		void SetEquippedItem();
+
+	UIItem *UIItemRef;
+
+	UFUNCTION()
+		void EquippedSetup();
+
+	UFUNCTION()
+		void InitialSetup();
 
 public:
 	

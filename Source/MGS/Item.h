@@ -11,7 +11,7 @@
  * The 3D representation of a pickup item
  */
 UENUM(BlueprintType)
-enum class EItemType : uint8 { Weapon, Ammo, Health, Other };
+enum class EItemType : uint8 { Weapon, Firearm, Ammo, Health, Other, None };
 UENUM(BlueprintType)
 enum class EItemLeathality: uint8 { Leathal, Nonleathal, None };
 

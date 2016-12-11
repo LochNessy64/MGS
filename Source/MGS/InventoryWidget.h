@@ -35,5 +35,13 @@ public:
 private:
 
 	
-	
+protected:
+	//ptr to determine currently equipped item
+	UInventorySlotWidget *CurrentlyEquippedSlotWidget;
+
+	//ptr to determine the previously equipped item
+	UInventorySlotWidget *PrevEquippedSlotWidget;
+
+	//ptr to determine currently SELECTED item when inventory menu is open
+	UInventorySlotWidget *CurrentlySelectedSlotWidget;
 };
