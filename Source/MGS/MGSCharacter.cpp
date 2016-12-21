@@ -26,6 +26,10 @@ void AMGSCharacter::BeginPlay()
 			InventoryWidget->SetVisibility(ESlateVisibility::Hidden); //set it to hidden to not open on spawn
 		}
 	}
+
+	UIItem *BlankUIItem = NewObject<UIItem>();
+	BlankUIItem->SetUIItemName("None");
+	Inventory.Add(BlankUIItem);
 }
 
 AMGSCharacter::AMGSCharacter()

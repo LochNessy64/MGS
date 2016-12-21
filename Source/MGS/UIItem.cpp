@@ -5,10 +5,13 @@
 
 UIItem::UIItem()
 {
+	UIItemName = "None";
+	Type = EItemType::None;
+	LeathalType = EItemLeathality::None;
 	bAreBulletsVisible = false;
 	bIsSelected = false;
 
-	//UITexture = CreateDefaultSubobject<UTexture2D>(FName("ItemTexture"));
+	UIItemTexture = CreateDefaultSubobject<UTexture2D>(FName("ItemTexture"));
 }
 
 bool UIItem::CheckIfBulletsVisible()

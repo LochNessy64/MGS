@@ -79,4 +79,12 @@ public:
 
 	/*Return the texture of the UI Item*/
 	FORCEINLINE UTexture2D *GetUIItemTexture() { return UIItemTexture; }
+
+	FORCEINLINE FString GetUIItemName() { return UIItemName; }
+
+	FORCEINLINE void SetUIItemName( FString NewName ) { UIItemName = NewName; }
+
+	FORCEINLINE FString GetUIToolTip() { return UIToolTip; }
+
+	FORCEINLINE void SetUIToolTip(FString NewTip) { UIToolTip = NewTip; }
 };

@@ -36,5 +36,5 @@ public:
 	/*Sets the item texture*/
 	UFUNCTION(BlueprintCallable, Category = UI)
 		void SetItemTexture(UTexture2D *NewTexture);
-	
+	//FORCEINLINE FText GetItemName() { return ItemName; }
 };

@@ -32,7 +32,9 @@ public:
 	/*Handles the Inventory Input by sending information to the controller*/
 	UFUNCTION()
 			void HandleInventoryInput();
-	TArray<UIItem *> Inventory;
+	
+	UFUNCTION()
+		FORCEINLINE TArray<UIItem *> GetInventory() { return Inventory; }
 protected:
 
 	/** Called for forwards/backward input */
@@ -75,7 +77,8 @@ protected:
 
 	float InvKeyHoldTime;
 
-	
+	UPROPERTY(VisibleAnywhere)
+		TArray<UIItem *> Inventory;
 
 protected:
 	// APawn interface

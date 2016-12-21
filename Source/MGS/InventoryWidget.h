@@ -4,7 +4,7 @@
 
 #include "Blueprint/UserWidget.h"
 #include "UIItem.h"
-
+#include "InventorySlotWidget.h"
 #include "InventoryWidget.generated.h"
 
 /**

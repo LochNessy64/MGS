@@ -11,34 +11,16 @@ void UInventoryWidget::Show()
 {
 	AddToViewport();
 
-	//this->WidgetTree->GetAllWidgets(SlotWidgets);
-	WidgetTree->ForEachWidget([&](UWidget* Widget) { 
-		UInventorySlotWidget *SlotWidget = Cast<UInventorySlotWidget>(Widget);
-		if (SlotWidget)
-		{
-			
-			UE_LOG(LogTemp, Warning, TEXT("Widget name: %s"), *SlotWidget->GetDisplayLabel());
-			//UWidget *ItemInfo = SlotWidget->WidgetTree->FindWidget(FName(TEXT("Item_Info")));
-			UTextBlock *ItemInfo = Cast<UTextBlock>(SlotWidget->WidgetTree->FindWidget(FName(TEXT("Item_Info"))));
-			UTextBlock *ItemName = Cast<UTextBlock>(SlotWidget->WidgetTree->FindWidget(FName(TEXT("ItemName"))));
-			if (ItemInfo)
-			{
-				//
-				UE_LOG(LogTemp, Warning, TEXT("Item info Text: %s"), *(ItemInfo->GetText().ToString()));
-				//UE_LOG(LogTemp, Warning, TEXT("Fullname: %s"), *ItemInfo->GetFullName());
-
-				//Set the FONT size, not the text size
-			}
-
-			if (ItemName)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Item name Text: %s"), *(ItemName->GetText().ToString()));
-			}
-		}
-	});
 	for (UIItem * Item : ItemsArray)
 	{
-		
+		if (Item != nullptr)
+		{
+			//how to populqte inventory? rather what to populate it with?
+			UInventorySlotWidget * swidget = Cast<UInventorySlotWidget>(WidgetTree->FindWidget(FName("UW_InventorySlot1")));
+			UTextBlock * ItemName = Cast<UTextBlock>(swidget->WidgetTree->FindWidget(FName("ItemName")));
+			ItemName->SetText(FText::FromString(Item->GetUIItemName()));
+			Cast<UUniformGridPanel>(swidget->WidgetTree->FindWidget(FName("CurrentClip")))->SetVisibility(ESlateVisibility::Hidden);
+		}
 	}
 }
 
