@@ -3,6 +3,14 @@
 #include "MGS.h"
 #include "InventorySlotWidget.h"
 
+UInventorySlotWidget::UInventorySlotWidget(const FObjectInitializer & ObjectInitializer)
+	:Super(ObjectInitializer)
+{
+	HighlightSlotColor = FLinearColor(0.046f, 0.026f, 1.0f, 0.295f);
+
+	DefaultSlotColor = FLinearColor(0.0f, 0.0f, 0.0f, 0.5f);
+}
+
 //send event to change animation so character has item in hand
 void UInventorySlotWidget::SetEquippedItem()
 {

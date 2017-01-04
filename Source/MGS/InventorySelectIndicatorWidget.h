@@ -34,23 +34,35 @@ protected:
 		FLinearColor ColorInUse;
 public:
 	UInventorySelectIndicatorWidget(const FObjectInitializer& ObjectInitializer);
-	//Have indicator color change function
-	FORCEINLINE void SetColorInUse(FLinearColor NewColor) { ColorInUse = NewColor; }
+	
+	UFUNCTION(BlueprintCallable, Category = "Color")
+		FORCEINLINE FLinearColor GetBackgroundColor() { return BackgroundColor; }
+
+	FORCEINLINE void SetBackgroundColor(FLinearColor NewColor) { BackgroundColor = NewColor; }
 
 	//Have indicator get color in use function
 	UFUNCTION(BlueprintCallable, Category = "Color")
 		FORCEINLINE FLinearColor GetColorInUse() { return ColorInUse; }
 
+	//Have indicator color change function
+	FORCEINLINE void SetColorInUse(FLinearColor NewColor) { ColorInUse = NewColor; }
+
 	//Have indicator get current selected color function
 	UFUNCTION(BlueprintCallable, Category = "Color")
 		FORCEINLINE FLinearColor GetCurrSelectedColor() { return CurrSelectedColor; }
+
+	FORCEINLINE void SetCurrSelectedColor(FLinearColor NewColor) { CurrSelectedColor = NewColor; }
 
 	//Have indicator get prev color function
 	UFUNCTION(BlueprintCallable, Category = "Color")
 		FORCEINLINE FLinearColor GetPrevSelectedColor() { return PrevSelectedColor; }
 
+	FORCEINLINE void SetPrevSelectedColor(FLinearColor NewColor) { PrevSelectedColor = NewColor; }
+
 	//Have indicator get not selected/default color function
 	UFUNCTION(BlueprintCallable, Category = "Color")
 		FORCEINLINE FLinearColor GetDefaultColor() { return DefaultColor; }
+
+	FORCEINLINE void SetDefaultColor(FLinearColor NewColor) { DefaultColor = NewColor; }
 	
 };
