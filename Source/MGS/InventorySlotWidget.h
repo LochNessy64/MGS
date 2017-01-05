@@ -33,7 +33,7 @@ protected:
 
 	//when slot is currently highlighted by player/when inventory is open
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		FLinearColor HighlightSlotColor;
+		FLinearColor HighlightItemColor;
 
 	//when row is in focus but slot is not selected or equipped
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -41,17 +41,29 @@ protected:
 
 	//When row isn't in focus
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		FLinearColor PassiveSlotColor;
+		bool bIsSlotInFocus;
 
 	//when slot is currently equipped
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		FLinearColor EquippedSlotColor;
+		FLinearColor EquippedItemColor;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		UTextBlock *ItemInfo;
+		FLinearColor ItemColorInUse;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		FLinearColor SlotColorInUse;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		FText ItemInfo;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool bIsItemInfoVisible;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		FText ItemName;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool bIsItemNameVisible;
 public:
 	UInventorySlotWidget(const FObjectInitializer& ObjectInitializer);
 
@@ -61,9 +73,9 @@ public:
 	//FORCEINLINE FText GetItemName() { return ItemName; }
 
 	UFUNCTION(BlueprintCallable, Category = "Color")
-		FORCEINLINE FLinearColor GetHighlightSlotColor() { return HighlightSlotColor; }
+		FORCEINLINE FLinearColor GetHighlightItemColor() { return HighlightItemColor; }
 
-	FORCEINLINE void SetHighlightSlotColor(FLinearColor NewColor) { HighlightSlotColor = NewColor; }
+	FORCEINLINE void SetHighlightItemColor(FLinearColor NewColor) { HighlightItemColor = NewColor; }
 
 	UFUNCTION(BlueprintCallable, Category = "Color")
 		FORCEINLINE FLinearColor GetDefaultSlotColor() { return DefaultSlotColor; }
@@ -71,22 +83,42 @@ public:
 	FORCEINLINE void SetDefaultSlotColor(FLinearColor NewColor) { DefaultSlotColor = NewColor; }
 
 	UFUNCTION(BlueprintCallable, Category = "Color")
-		FORCEINLINE FLinearColor GetPassiveSlotColor() { return PassiveSlotColor; }
+		FORCEINLINE bool IsSlotInFocus() { return bIsSlotInFocus; }
 
-	FORCEINLINE void SetPassiveSlotColor(FLinearColor NewColor) { PassiveSlotColor = NewColor; }
+	FORCEINLINE void SetSlotFocus(bool NewState) { bIsSlotInFocus = NewState; }
 
 	UFUNCTION(BlueprintCallable, Category = "Color")
-		FORCEINLINE FLinearColor GetEquippedSlotColor() { return EquippedSlotColor; }
+		FORCEINLINE FLinearColor GetEquippedItemColor() { return EquippedItemColor; }
 
-	FORCEINLINE void SetEquippedSlotColor(FLinearColor NewColor) { EquippedSlotColor = NewColor; }
+	FORCEINLINE void SetEquippedItemColor(FLinearColor NewColor) { EquippedItemColor = NewColor; }
 
-	UFUNCTION(BlueprintCallable, Category = "Item Info")
-		FORCEINLINE UTextBlock *GetItemInfo() { return ItemInfo; }
+	UFUNCTION(BlueprintCallable, Category = "Text")
+		FORCEINLINE FText GetItemInfo() { return ItemInfo; }
 
-	FORCEINLINE void SetItemInfo(UTextBlock *NewText) { ItemInfo = NewText; }
+	FORCEINLINE void SetItemInfo(FText NewText) { ItemInfo = NewText; }
 
-	UFUNCTION(BlueprintCallable, Category = "Item Info")
+	UFUNCTION(BlueprintCallable, Category = "Text")
 		FORCEINLINE bool IsItemInfoVisible() { return bIsItemInfoVisible; }
 
 	FORCEINLINE void SetItemInfoVisibility(bool NewState) { bIsItemInfoVisible = NewState; }
+
+	UFUNCTION(BlueprintCallable, Category = "Text")
+		FORCEINLINE FText GetItemName() { return ItemName; }
+
+	FORCEINLINE void SetItemName(FText NewText) { ItemName = NewText; }
+
+	UFUNCTION(BlueprintCallable, Category = "Text")
+		FORCEINLINE bool IsItemNameVisible() { return bIsItemNameVisible; }
+
+	FORCEINLINE void SetItemNameVisibility(bool NewState) { bIsItemNameVisible = NewState; }
+
+	UFUNCTION(BlueprintCallable, Category = "Color")
+		FORCEINLINE FLinearColor GetItemColorInUse() { return ItemColorInUse; }
+
+	FORCEINLINE void SetItemColorInUse(FLinearColor NewColor) { ItemColorInUse = NewColor; }
+
+	UFUNCTION(BlueprintCallable, Category = "Color")
+		FORCEINLINE FLinearColor GetSlotColorInUse() { return SlotColorInUse; }
+
+	FORCEINLINE void SetSlotColorInUse(FLinearColor NewColor) { SlotColorInUse = NewColor; }
 };

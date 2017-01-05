@@ -6,9 +6,17 @@
 UInventorySlotWidget::UInventorySlotWidget(const FObjectInitializer & ObjectInitializer)
 	:Super(ObjectInitializer)
 {
-	HighlightSlotColor = FLinearColor(0.046f, 0.026f, 1.0f, 0.295f);
+	HighlightItemColor = FLinearColor(0.046f, 0.026f, 1.0f, 0.295f);
 
 	DefaultSlotColor = FLinearColor(0.0f, 0.0f, 0.0f, 0.5f);
+
+	ItemInfo = FText::FromString("Item Info!");
+
+	ItemName = FText::FromString("Item Name!");
+	
+	ItemColorInUse = HighlightItemColor;
+
+	SlotColorInUse = DefaultSlotColor;
 }
 
 //send event to change animation so character has item in hand
