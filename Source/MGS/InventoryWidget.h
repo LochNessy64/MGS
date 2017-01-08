@@ -5,6 +5,7 @@
 #include "Blueprint/UserWidget.h"
 #include "UIItem.h"
 #include "InventorySlotWidget.h"
+#include "InventoryHorizontalWidget.h"
 #include "InventoryWidget.generated.h"
 
 /**
@@ -16,26 +17,33 @@ class MGS_API UInventoryWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+
+	UInventoryWidget(const FObjectInitializer &ObjectInitializer);
+
 	/*Adds the widget into the viewport and populates the inventory slots*/
 	UFUNCTION()
 		void Show();
 
 	/*Removes the widget from the viewport*/
 
-	UFUNCTION(BlueprintImplementableEvent, Category = UI)
+	UFUNCTION()
 		void Hide();
 
-
-	/*Stores a reference in order to bind info on inventory slots*/
-	
- 		TArray<UIItem *> ItemsArray;
-
-		TArray<UWidget *> SlotWidgets;
 
 private:
 
 	
 protected:
+
+	/*Stores a reference in order to bind info on inventory slots*/
+
+	TArray<UInventoryHorizontalWidget *> HorizontalWidgets;
+
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<UInventoryHorizontalWidget> HorizontalWidgetBP;
+
+	UInventoryHorizontalWidget *CurrHorizontalWidget;
+
 	//ptr to determine currently equipped item
 	UInventorySlotWidget *CurrentlyEquippedSlotWidget;
 

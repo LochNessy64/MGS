@@ -41,7 +41,7 @@ protected:
 
 	//When row isn't in focus
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		bool bIsSlotInFocus;
+		bool bIsSlotHighlighted;
 
 	//when slot is currently equipped
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -64,6 +64,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool bIsItemNameVisible;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool bIsItemEquipped;
+
 public:
 	UInventorySlotWidget(const FObjectInitializer& ObjectInitializer);
 
@@ -83,9 +87,9 @@ public:
 	FORCEINLINE void SetDefaultSlotColor(FLinearColor NewColor) { DefaultSlotColor = NewColor; }
 
 	UFUNCTION(BlueprintCallable, Category = "Color")
-		FORCEINLINE bool IsSlotInFocus() { return bIsSlotInFocus; }
+		FORCEINLINE bool IsSlotHighlighted() { return bIsSlotHighlighted; }
 
-	FORCEINLINE void SetSlotFocus(bool NewState) { bIsSlotInFocus = NewState; }
+	FORCEINLINE void SetSlotHighlight(bool NewState) { bIsSlotHighlighted = NewState; }
 
 	UFUNCTION(BlueprintCallable, Category = "Color")
 		FORCEINLINE FLinearColor GetEquippedItemColor() { return EquippedItemColor; }

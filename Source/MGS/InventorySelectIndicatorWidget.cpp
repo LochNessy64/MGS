@@ -16,4 +16,6 @@ UInventorySelectIndicatorWidget::UInventorySelectIndicatorWidget(const FObjectIn
 	PrevSelectedColor = FLinearColor(.5f, .5f, .5f);
 
 	ColorInUse = DefaultColor;
+
+	IndicatorTexture = CreateDefaultSubobject<UTexture2D>(FName("Indicator Texture"));
 }

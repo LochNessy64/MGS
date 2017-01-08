@@ -40,7 +40,7 @@ void AMyPlayerController::HandleInventoryInput()
 			bIsInventoryOpen = true;
 
 			//Re-populate the items array
-			InventoryWidgetRef->ItemsArray = Char->GetInventory();
+//			InventoryWidgetRef->ItemsArray = Char->GetInventory();
 
 			//Show the inventory
 			InventoryWidgetRef->Show();

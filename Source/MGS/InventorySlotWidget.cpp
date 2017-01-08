@@ -17,6 +17,25 @@ UInventorySlotWidget::UInventorySlotWidget(const FObjectInitializer & ObjectInit
 	ItemColorInUse = HighlightItemColor;
 
 	SlotColorInUse = DefaultSlotColor;
+
+	bIsSlotHighlighted = false;
+
+	bIsItemEquipped = false;
+
+	EquippedItemColor = FLinearColor(0.315f, 0.723f, 1.0f);
+
+	bIsItemInfoVisible = false;
+
+	bIsItemNameVisible = true;
+
+	if (UIItemRef == nullptr)
+	{
+		ItemTexture = CreateDefaultSubobject<UTexture2D>(FName("Item Texture"));
+	}
+	else
+	{
+		ItemTexture = UIItemRef->GetUIItemTexture();
+	}
 }
 
 //send event to change animation so character has item in hand
@@ -32,14 +51,18 @@ void UInventorySlotWidget::EquippedSetup()
 	switch (UIItemRef->GetItemType())
 	{
 	case EItemType::Firearm:
+		bIsItemInfoVisible = true;
 		//Get num of bullets for firearm
 		//divide space from bullet space widget by the number of bullets in the clip and the widget of the bullet image
 		//show full clip of bullets initially
 		//hide item name
+		bIsItemNameVisible = false;
 		break;
 		
 	default:
 		//show item name and count by default
+		bIsItemInfoVisible = true;
+		bIsItemNameVisible = true;
 		break;
 	}
 }
@@ -53,10 +76,14 @@ void UInventorySlotWidget::InitialSetup()
 	case EItemType::Other:
 	case EItemType::None:
 		//show only item name since these types of items won't have a count.
+		bIsItemNameVisible = true;
+		bIsItemInfoVisible = false;
 		break;
 
 	default:
 		//show item name and count by default
+		bIsItemInfoVisible = true;
+		bIsItemNameVisible = true;
 		break;
 	}
 }
