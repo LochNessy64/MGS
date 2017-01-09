@@ -15,11 +15,11 @@ void AMGSCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	Inventory.SetNum(MAX_INVENTORY_ITEMS);
-	if (InventoryUIClass)
+	if (InventoryWidgetBP)
 	{
 		if (!InventoryWidget)
 		{
-			InventoryWidget = CreateWidget <UInventoryUserWidget>(GetWorld(), InventoryUIClass);
+			InventoryWidget = CreateWidget <UInventoryWidget>(GetWorld(), InventoryWidgetBP);
 			if (!InventoryWidget)
 				return;
 			InventoryWidget->AddToViewport();
@@ -30,6 +30,9 @@ void AMGSCharacter::BeginPlay()
 	UIItem *BlankUIItem = NewObject<UIItem>();
 	BlankUIItem->SetUIItemName("None");
 	Inventory.Add(BlankUIItem);
+
+	//Initial value
+	bIsInventoryOpen = false;
 }
 
 AMGSCharacter::AMGSCharacter()
@@ -174,7 +177,7 @@ void AMGSCharacter::ShowInventory()
 	bShowingInventory = true;
 	
 	UE_LOG(LogTemp, Warning, TEXT("Inventory should be visible"))
-	InventoryWidget->SetVisibility(ESlateVisibility::Visible);
+	InventoryWidget->Show();
 			
 
 }
@@ -184,6 +187,6 @@ void AMGSCharacter::HideInventory()
 	InvKeyHoldTime = 0.0f;
 	bShowingInventory = false;
 	UE_LOG(LogTemp, Warning, TEXT("Inventory should be hidden"))
-	InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+	InventoryWidget->Hide();
 
 }

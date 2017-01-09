@@ -63,11 +63,11 @@ protected:
 
 	//Class that will be used for player's inventory UI
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Player Inventory")
-		TSubclassOf<class UInventoryUserWidget> InventoryUIClass;
+		TSubclassOf<class UInventoryWidget> InventoryWidgetBP;
 
 	//Instance of player's Inventory UI widget
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category ="Player Inventory")
-	class UInventoryUserWidget* InventoryWidget;
+	class UInventoryWidget* InventoryWidget;
 
 	void HideInventory();
 
@@ -79,6 +79,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 		TArray<UIItem *> Inventory;
+
+	/*True if the inventory is currently open - false otherwise*/
+	bool bIsInventoryOpen;
 
 protected:
 	// APawn interface

@@ -35,6 +35,8 @@ protected:
 public:
 	UInventoryHorizontalWidget(const FObjectInitializer &ObjectInitializer);
 
+	virtual bool Initialize() override;
+
 	//have show and hide function
 	void Show();
 

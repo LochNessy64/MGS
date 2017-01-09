@@ -10,14 +10,14 @@ void AMyPlayerController::Possess(APawn * InPawn)
 {
 	Super::Possess(InPawn);
 
-	if (InventoryWidgetBP)
-	{
-		//Create the inventory widget based on the blueprint reference we will input from within the editor
-		InventoryWidgetRef = CreateWidget<UInventoryWidget>(this, InventoryWidgetBP);
-	}
+	//if (InventoryWidgetBP)
+	//{
+	//	//Create the inventory widget based on the blueprint reference we will input from within the editor
+	//	InventoryWidgetRef = CreateWidget<UInventoryWidget>(this, InventoryWidgetBP);
+	//}
 
-	//Initial value
-	bIsInventoryOpen = false;
+	////Initial value
+	//bIsInventoryOpen = false;
 
 }
 

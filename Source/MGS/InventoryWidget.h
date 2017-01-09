@@ -29,7 +29,7 @@ public:
 	UFUNCTION()
 		void Hide();
 
-
+	virtual bool Initialize() override;
 private:
 
 	
@@ -38,6 +38,10 @@ protected:
 	/*Stores a reference in order to bind info on inventory slots*/
 
 	TArray<UInventoryHorizontalWidget *> HorizontalWidgets;
+
+	UInventoryHorizontalWidget *TempHorizontalWidget;
+
+	UInventoryHorizontalWidget *TempBPHWidget;
 
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<UInventoryHorizontalWidget> HorizontalWidgetBP;

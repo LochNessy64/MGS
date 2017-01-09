@@ -11,25 +11,50 @@
 UInventoryWidget::UInventoryWidget(const FObjectInitializer &ObjectInitializer)
 	:Super(ObjectInitializer)
 {
+	//TODO: Move this to initialize function you're going to override and call the superclass
+	
+}
+
+bool UInventoryWidget::Initialize()
+{
+	Super::Initialize();
 
 	if (HorizontalWidgetBP)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("HorizontalWidgetBP Set"));
-		for (int i = 0; i < MAX_HORIZONTAL_SLOT_COUNT; i++)
+		if (GetWorld())
 		{
-			UInventoryHorizontalWidget *HWidget = CreateWidget<UInventoryHorizontalWidget>(this->GetWorld(), HorizontalWidgetBP);
-			if (i == 0)
+			if (!TempHorizontalWidget && GetWorld()->HasBegunPlay())
 			{
-				HWidget->GetSlotWidgets()[0]->SetItemName(FText::FromString("NONE"));
-			}
-			
-			HorizontalWidgets.Add(HWidget);
-			UInventoryHorizontalWidget *BPHWidget = Cast<UInventoryHorizontalWidget>(WidgetTree->FindWidget(FName("UW_UIInventory_" + i)));
-			UE_LOG(LogTemp, Warning, TEXT("BPHWidget Name: %s"), *BPHWidget->GetName());
-			BPHWidget = HWidget;
+				for (int i = 0; i < MAX_HORIZONTAL_SLOT_COUNT; i++)
+				{
+					TempHorizontalWidget = CreateWidget<UInventoryHorizontalWidget>(this->GetWorld(), HorizontalWidgetBP);
+					if (!TempHorizontalWidget)
+						return false;
 
+					if (i == 0)
+					{
+						TempHorizontalWidget->GetSlotWidgets()[0]->SetItemName(FText::FromString("NONE"));
+					}
+
+					HorizontalWidgets.Add(TempHorizontalWidget);
+
+					if (!TempBPHWidget)
+					{
+						TempBPHWidget = Cast<UInventoryHorizontalWidget>(WidgetTree->FindWidget(FName("UW_UIInventory_" + i)));
+						if (!TempBPHWidget)
+							return false;
+
+						UE_LOG(LogTemp, Warning, TEXT("BPHWidget Name: %s"), *TempBPHWidget->GetName());
+						TempBPHWidget = TempHorizontalWidget;
+					}
+
+				}
+				return true;
+			}
 		}
 	}
+	return false;
 }
 
 void UInventoryWidget::Show()
@@ -57,4 +82,6 @@ void UInventoryWidget::Hide()
 {
 	RemoveFromViewport();
 }
+
+
 
