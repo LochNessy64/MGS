@@ -24,7 +24,7 @@ bool UInventoryWidget::Initialize()
 		UE_LOG(LogTemp, Warning, TEXT("HorizontalWidgetBP Set"));
 		if (GetWorld())
 		{
-			if (!TempHorizontalWidget && GetWorld()->HasBegunPlay())
+			if (!TempHorizontalWidget )
 			{
 				for (int i = 0; i < MAX_HORIZONTAL_SLOT_COUNT; i++)
 				{
@@ -41,12 +41,14 @@ bool UInventoryWidget::Initialize()
 
 					if (!TempBPHWidget)
 					{
-						TempBPHWidget = Cast<UInventoryHorizontalWidget>(WidgetTree->FindWidget(FName("UW_UIInventory_" + i)));
+						TempBPHWidget = Cast<UInventoryHorizontalWidget>(WidgetTree->FindWidget(FName(*FString("UW_UIInventory_" + FString::FromInt(i)))));
+						
 						if (!TempBPHWidget)
 							return false;
 
 						UE_LOG(LogTemp, Warning, TEXT("BPHWidget Name: %s"), *TempBPHWidget->GetName());
 						TempBPHWidget = TempHorizontalWidget;
+						UE_LOG(LogTemp, Warning, TEXT("BPHWidget Slot Item Name: %s"), *TempBPHWidget->GetSlotWidgets()[0]->GetItemName().ToString());
 					}
 
 				}
@@ -59,6 +61,7 @@ bool UInventoryWidget::Initialize()
 
 void UInventoryWidget::Show()
 {
+	UE_LOG(LogTemp, Warning, TEXT("In UInventoryWidget::Show()"));
 	AddToViewport();
 
 	for (UInventoryHorizontalWidget* HWidget : HorizontalWidgets)
@@ -81,6 +84,7 @@ void UInventoryWidget::Show()
 void UInventoryWidget::Hide()
 {
 	RemoveFromViewport();
+	UE_LOG(LogTemp, Warning, TEXT("In UInventoryWidget::Hide()"));
 }
 
 

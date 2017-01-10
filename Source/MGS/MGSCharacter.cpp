@@ -177,8 +177,8 @@ void AMGSCharacter::ShowInventory()
 	bShowingInventory = true;
 	
 	UE_LOG(LogTemp, Warning, TEXT("Inventory should be visible"))
-	InventoryWidget->Show();
-			
+	//InventoryWidget->Show();
+	InventoryWidget->SetVisibility(ESlateVisibility::Visible);
 
 }
 
@@ -187,6 +187,6 @@ void AMGSCharacter::HideInventory()
 	InvKeyHoldTime = 0.0f;
 	bShowingInventory = false;
 	UE_LOG(LogTemp, Warning, TEXT("Inventory should be hidden"))
-	InventoryWidget->Hide();
-
+	//InventoryWidget->Hide();
+	InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
 }

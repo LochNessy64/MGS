@@ -14,20 +14,29 @@ UInventoryHorizontalWidget::UInventoryHorizontalWidget(const FObjectInitializer 
 bool UInventoryHorizontalWidget::Initialize()
 {
 	Super::Initialize();
-
-	if (IndicatorWidgetBP)
+	if (GetWorld())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("IndicatorWidgetBP Set"));
-		Indicator = CreateWidget<UInventorySelectIndicatorWidget>(this->GetWorld(), IndicatorWidgetBP);
-	}
-
-	if (SlotWidgetBP)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("SlotWidgetBP Set"));
-		for (int i = 0; i < MAX_SLOT_COUNT; i++)
+		if (IndicatorWidgetBP)
 		{
-			SlotWidgets.Add(CreateWidget<UInventorySlotWidget>(this->GetWorld(), SlotWidgetBP));
+			UE_LOG(LogTemp, Warning, TEXT("IndicatorWidgetBP Set"));
+
+			Indicator = CreateWidget<UInventorySelectIndicatorWidget>(this->GetWorld(), IndicatorWidgetBP);
+			if (!Indicator)
+				return false;
 		}
+
+		if (SlotWidgetBP)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("SlotWidgetBP Set"));
+			for (int i = 0; i < MAX_SLOT_COUNT; i++)
+			{
+				UInventorySlotWidget *Slot = CreateWidget<UInventorySlotWidget>(this->GetWorld(), SlotWidgetBP);
+				if (!Slot)
+					return false;
+				SlotWidgets.Add(Slot);
+			}
+		}
+		return true;
 	}
 	return false;
 }

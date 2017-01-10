@@ -15,7 +15,7 @@ class MGS_API UInventorySelectIndicatorWidget : public UUserWidget
 
 protected:
 	//Have reference to background color, prev selected color, current selected color, not selected/default color
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly)
 		UTexture2D *IndicatorTexture;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -34,6 +34,8 @@ protected:
 		FLinearColor ColorInUse;
 public:
 	UInventorySelectIndicatorWidget(const FObjectInitializer& ObjectInitializer);
+
+	virtual bool Initialize() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "Color")
 		FORCEINLINE FLinearColor GetBackgroundColor() { return BackgroundColor; }

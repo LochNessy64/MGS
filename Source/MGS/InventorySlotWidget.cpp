@@ -6,36 +6,44 @@
 UInventorySlotWidget::UInventorySlotWidget(const FObjectInitializer & ObjectInitializer)
 	:Super(ObjectInitializer)
 {
-	HighlightItemColor = FLinearColor(0.046f, 0.026f, 1.0f, 0.295f);
-
-	DefaultSlotColor = FLinearColor(0.0f, 0.0f, 0.0f, 0.5f);
-
-	ItemInfo = FText::FromString("Item Info!");
-
-	ItemName = FText::FromString("Item Name!");
-	
-	ItemColorInUse = HighlightItemColor;
-
-	SlotColorInUse = DefaultSlotColor;
-
-	bIsSlotHighlighted = false;
-
-	bIsItemEquipped = false;
-
-	EquippedItemColor = FLinearColor(0.315f, 0.723f, 1.0f);
-
-	bIsItemInfoVisible = false;
-
-	bIsItemNameVisible = true;
-
-	if (UIItemRef == nullptr)
-	{
-		ItemTexture = CreateDefaultSubobject<UTexture2D>(FName("Item Texture"));
 	}
-	else
+
+bool UInventorySlotWidget::Initialize()
+{
+	Super::Initialize();
+	if (GetWorld())
 	{
-		ItemTexture = UIItemRef->GetUIItemTexture();
+		HighlightItemColor = FLinearColor(0.046f, 0.026f, 1.0f, 0.295f);
+
+		DefaultSlotColor = FLinearColor(0.0f, 0.0f, 0.0f, 0.5f);
+
+		ItemInfo = FText::FromString("Item Info!");
+
+		ItemName = FText::FromString("Item Name!");
+
+		ItemColorInUse = HighlightItemColor;
+
+		SlotColorInUse = DefaultSlotColor;
+
+		bIsSlotHighlighted = false;
+
+		bIsItemEquipped = false;
+
+		EquippedItemColor = FLinearColor(0.315f, 0.723f, 1.0f);
+
+		bIsItemInfoVisible = false;
+
+		bIsItemNameVisible = true;
+
+		if (UIItemRef)
+		{
+			ItemTexture = UIItemRef->GetUIItemTexture();
+		}
+
+		return true;
 	}
+
+	return false;
 }
 
 //send event to change animation so character has item in hand

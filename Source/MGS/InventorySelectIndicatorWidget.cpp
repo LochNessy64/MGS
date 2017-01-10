@@ -7,15 +7,30 @@
 UInventorySelectIndicatorWidget::UInventorySelectIndicatorWidget(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
 {
-	DefaultColor = FLinearColor(1.0f, 1.0f, 1.0f);
+	
+}
 
-	BackgroundColor = FLinearColor(0.0f, 0.0f, 0.0f);
+bool UInventorySelectIndicatorWidget::Initialize()
+{
+	Super::Initialize();
+	if (GetWorld())
+	{
+		DefaultColor = FLinearColor(1.0f, 1.0f, 1.0f);
 
-	CurrSelectedColor = FLinearColor(1.0f, .388f, 0.0f);
+		BackgroundColor = FLinearColor(0.0f, 0.0f, 0.0f);
 
-	PrevSelectedColor = FLinearColor(.5f, .5f, .5f);
+		CurrSelectedColor = FLinearColor(1.0f, .388f, 0.0f);
 
-	ColorInUse = DefaultColor;
+		PrevSelectedColor = FLinearColor(.5f, .5f, .5f);
 
-	IndicatorTexture = CreateDefaultSubobject<UTexture2D>(FName("Indicator Texture"));
+		ColorInUse = DefaultColor;
+		//if (!IndicatorTexture)
+		//{
+		//	IndicatorTexture = CreateDefaultSubobject<UTexture2D>(FName("Indicator Texture"));
+		//}
+
+		return true;
+	}
+
+	return false;
 }

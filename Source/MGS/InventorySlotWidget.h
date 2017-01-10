@@ -16,7 +16,7 @@ class MGS_API UInventorySlotWidget : public UUserWidget
 	
 protected:
 	/*Holds a reference to the item texture*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly)
 		UTexture2D *ItemTexture;
 
 	/*Tells the player to equip the represented item from this widget*/
@@ -70,6 +70,8 @@ protected:
 
 public:
 	UInventorySlotWidget(const FObjectInitializer& ObjectInitializer);
+
+	virtual bool Initialize() override;
 
 	/*Sets the item texture*/
 	UFUNCTION(BlueprintCallable, Category = UI)
