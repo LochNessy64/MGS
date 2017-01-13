@@ -22,8 +22,8 @@ void AMGSCharacter::BeginPlay()
 			InventoryWidget = CreateWidget <UInventoryWidget>(GetWorld(), InventoryWidgetBP);
 			if (!InventoryWidget)
 				return;
-			InventoryWidget->AddToViewport();
-			InventoryWidget->SetVisibility(ESlateVisibility::Hidden); //set it to hidden to not open on spawn
+			//nventoryWidget->AddToViewport();
+			//InventoryWidget->SetVisibility(ESlateVisibility::Hidden); //set it to hidden to not open on spawn
 		}
 	}
 
@@ -177,8 +177,8 @@ void AMGSCharacter::ShowInventory()
 	bShowingInventory = true;
 	
 	UE_LOG(LogTemp, Warning, TEXT("Inventory should be visible"))
-	//InventoryWidget->Show();
-	InventoryWidget->SetVisibility(ESlateVisibility::Visible);
+	InventoryWidget->Show();
+	//InventoryWidget->SetVisibility(ESlateVisibility::Visible);
 
 }
 
@@ -187,6 +187,6 @@ void AMGSCharacter::HideInventory()
 	InvKeyHoldTime = 0.0f;
 	bShowingInventory = false;
 	UE_LOG(LogTemp, Warning, TEXT("Inventory should be hidden"))
-	//InventoryWidget->Hide();
-	InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+	InventoryWidget->Hide();
+	//InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
 }

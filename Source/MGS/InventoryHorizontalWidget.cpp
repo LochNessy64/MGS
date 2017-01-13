@@ -30,7 +30,8 @@ bool UInventoryHorizontalWidget::Initialize()
 			UE_LOG(LogTemp, Warning, TEXT("SlotWidgetBP Set"));
 			for (int i = 0; i < MAX_SLOT_COUNT; i++)
 			{
-				UInventorySlotWidget *Slot = CreateWidget<UInventorySlotWidget>(this->GetWorld(), SlotWidgetBP);
+				//UInventorySlotWidget *Slot = CreateWidget<UInventorySlotWidget>(this->GetWorld(), SlotWidgetBP);
+				UInventorySlotWidget *Slot = Cast<UInventorySlotWidget>(WidgetTree->FindWidget(FName(*FString("UW_InventorySlot_" + FString::FromInt(i)))));
 				if (!Slot)
 					return false;
 				SlotWidgets.Add(Slot);

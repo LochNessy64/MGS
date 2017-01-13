@@ -39,17 +39,18 @@ bool UInventoryWidget::Initialize()
 
 					HorizontalWidgets.Add(TempHorizontalWidget);
 
+					TempBPHWidget = Cast<UInventoryHorizontalWidget>(WidgetTree->FindWidget(FName(*FString("UW_UIInventory_" + FString::FromInt(i)))));
+					
 					if (!TempBPHWidget)
-					{
-						TempBPHWidget = Cast<UInventoryHorizontalWidget>(WidgetTree->FindWidget(FName(*FString("UW_UIInventory_" + FString::FromInt(i)))));
-						
-						if (!TempBPHWidget)
-							return false;
+						return false;
 
-						UE_LOG(LogTemp, Warning, TEXT("BPHWidget Name: %s"), *TempBPHWidget->GetName());
-						TempBPHWidget = TempHorizontalWidget;
-						UE_LOG(LogTemp, Warning, TEXT("BPHWidget Slot Item Name: %s"), *TempBPHWidget->GetSlotWidgets()[0]->GetItemName().ToString());
-					}
+					UE_LOG(LogTemp, Warning, TEXT("BPHWidget Name: %s"), *TempBPHWidget->GetName());
+
+					//I don't think this statement is actually making the widgets from the BP change
+
+					UE_LOG(LogTemp, Warning, TEXT("BPHWidget Slot Item Name: %s"), *TempBPHWidget->GetSlotWidgets()[0]->GetItemName().ToString());
+					TempBPHWidget->GetSlotWidgets()[0]->SetItemInfo(FText::FromString("AAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHH"));
+					UE_LOG(LogTemp, Warning, TEXT("BPHWidget Slot Item Name: %s"), *TempBPHWidget->GetSlotWidgets()[0]->GetItemName().ToString());
 
 				}
 				return true;
@@ -66,7 +67,7 @@ void UInventoryWidget::Show()
 
 	for (UInventoryHorizontalWidget* HWidget : HorizontalWidgets)
 	{
-
+		UE_LOG(LogTemp, Warning, TEXT("HWidget Slot Item Name"))
 	}
 	//for (UIItem * Item : ItemsArray)
 	//{
