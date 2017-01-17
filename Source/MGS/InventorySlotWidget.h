@@ -68,15 +68,24 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool bIsItemEquipped;
 
+	UUniformGridPanel *ClipGrid;
+
 public:
 	UInventorySlotWidget(const FObjectInitializer& ObjectInitializer);
 
 	virtual bool Initialize() override;
 
+	UFUNCTION(BlueprintCallable, Category= UI)
+		FORCEINLINE UTexture2D *GetItemTexture() { return ItemTexture; }
+
 	/*Sets the item texture*/
-	UFUNCTION(BlueprintCallable, Category = UI)
-		void SetItemTexture(UTexture2D *NewTexture);
-	//FORCEINLINE FText GetItemName() { return ItemName; }
+	
+	void SetItemTexture(UTexture2D *NewTexture);
+	
+	FORCEINLINE UIItem *GetUIItemRef() { return UIItemRef; }
+
+	FORCEINLINE void SetUIItemRef(UIItem *NewItemRef) { UIItemRef = NewItemRef; }
+
 
 	UFUNCTION(BlueprintCallable, Category = "Color")
 		FORCEINLINE FLinearColor GetHighlightItemColor() { return HighlightItemColor; }

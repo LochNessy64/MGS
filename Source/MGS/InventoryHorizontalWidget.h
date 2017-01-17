@@ -17,7 +17,9 @@ class MGS_API UInventoryHorizontalWidget : public UUserWidget
 
 protected:
 	//Have list of slot widgets
-	TArray<UInventorySlotWidget *> SlotWidgets;
+	TArray<UInventorySlotWidget *> AllSlotWidgets;
+
+	TArray<UInventorySlotWidget *> VisibleSlotWidgets;
 
 	//BP reference
 	UPROPERTY(EditDefaultsOnly)
@@ -35,6 +37,7 @@ protected:
 public:
 	UInventoryHorizontalWidget(const FObjectInitializer &ObjectInitializer);
 
+	
 	virtual bool Initialize() override;
 
 	//have show and hide function
@@ -46,6 +49,12 @@ public:
 
 	FORCEINLINE UInventorySlotWidget *GetHighlightedSlot() { return HighlightedSlot; }
 
-	FORCEINLINE TArray<UInventorySlotWidget *> GetSlotWidgets() { return SlotWidgets; }
+	FORCEINLINE TArray<UInventorySlotWidget *> GetAllSlotWidgets() { return AllSlotWidgets; }
+
+	void SetAllSlotWidgets(TArray<UInventorySlotWidget *> NewArray);
+
+	FORCEINLINE TArray<UInventorySlotWidget *> GetVisibleSlotWidgets() { return VisibleSlotWidgets; }
+
+	FORCEINLINE void SetVisibleSlotWidgets(TArray<UInventorySlotWidget *> NewArray) { VisibleSlotWidgets = NewArray; }
 
 };

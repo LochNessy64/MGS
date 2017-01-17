@@ -11,6 +11,7 @@ UInventoryHorizontalWidget::UInventoryHorizontalWidget(const FObjectInitializer 
 	
 }
 
+
 bool UInventoryHorizontalWidget::Initialize()
 {
 	Super::Initialize();
@@ -34,7 +35,8 @@ bool UInventoryHorizontalWidget::Initialize()
 				UInventorySlotWidget *Slot = Cast<UInventorySlotWidget>(WidgetTree->FindWidget(FName(*FString("UW_InventorySlot_" + FString::FromInt(i)))));
 				if (!Slot)
 					return false;
-				SlotWidgets.Add(Slot);
+				VisibleSlotWidgets.Add(Slot);
+				AllSlotWidgets.Add(Slot);
 			}
 		}
 		return true;
@@ -51,4 +53,23 @@ void UInventoryHorizontalWidget::Hide()
 {
 
 
+}
+
+void UInventoryHorizontalWidget::SetAllSlotWidgets(TArray<UInventorySlotWidget*> NewArray)
+{
+	if (NewArray.Num() == AllSlotWidgets.Num())
+	{
+		for (int i = 0; i < AllSlotWidgets.Num(); ++i)
+		{
+			AllSlotWidgets[i]->SetItemTexture( NewArray[i]->GetItemTexture());
+			AllSlotWidgets[i]->SetUIItemRef(NewArray[i]->GetUIItemRef());
+			AllSlotWidgets[i]->SetItemInfo(NewArray[i]->GetItemInfo());
+			AllSlotWidgets[i]->SetItemName(NewArray[i]->GetItemName());
+		}
+
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Arrays aren't the same size"));
+	}
 }

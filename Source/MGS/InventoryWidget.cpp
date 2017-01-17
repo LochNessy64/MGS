@@ -6,7 +6,8 @@
 #include "InventorySlotWidget.h"
 #include "InventoryWidget.h"
 
-#define MAX_HORIZONTAL_SLOT_COUNT 5
+#define MAX_VISIBLE_HORIZONTAL_SLOT_COUNT 5
+#define MAX_CIRCULAR_ARRAY_COUNT 15
 
 UInventoryWidget::UInventoryWidget(const FObjectInitializer &ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -19,27 +20,30 @@ bool UInventoryWidget::Initialize()
 {
 	Super::Initialize();
 
+	
+
 	if (HorizontalWidgetBP)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("HorizontalWidgetBP Set"));
 		if (GetWorld())
 		{
-			if (!TempHorizontalWidget )
-			{
-				for (int i = 0; i < MAX_HORIZONTAL_SLOT_COUNT; i++)
+			/*if (!TempHorizontalWidget )
+			{*/
+				for (int i = 0; i < MAX_VISIBLE_HORIZONTAL_SLOT_COUNT; i++)
 				{
-					TempHorizontalWidget = CreateWidget<UInventoryHorizontalWidget>(this->GetWorld(), HorizontalWidgetBP);
+					UInventoryHorizontalWidget *TempHorizontalWidget = CreateWidget<UInventoryHorizontalWidget>(this->GetWorld(), HorizontalWidgetBP);
 					if (!TempHorizontalWidget)
 						return false;
 
 					if (i == 0)
 					{
-						TempHorizontalWidget->GetSlotWidgets()[0]->SetItemName(FText::FromString("NONE"));
+						TempHorizontalWidget->GetAllSlotWidgets()[0]->SetItemName(FText::FromString("NONE"));
+						
 					}
 
-					HorizontalWidgets.Add(TempHorizontalWidget);
+					AllHorizontalWidgets.push_back(TempHorizontalWidget);
 
-					TempBPHWidget = Cast<UInventoryHorizontalWidget>(WidgetTree->FindWidget(FName(*FString("UW_UIInventory_" + FString::FromInt(i)))));
+					UInventoryHorizontalWidget *TempBPHWidget = Cast<UInventoryHorizontalWidget>(WidgetTree->FindWidget(FName(*FString("UW_UIInventory_" + FString::FromInt(i)))));
 					
 					if (!TempBPHWidget)
 						return false;
@@ -48,13 +52,30 @@ bool UInventoryWidget::Initialize()
 
 					//I don't think this statement is actually making the widgets from the BP change
 
-					UE_LOG(LogTemp, Warning, TEXT("BPHWidget Slot Item Name: %s"), *TempBPHWidget->GetSlotWidgets()[0]->GetItemName().ToString());
-					TempBPHWidget->GetSlotWidgets()[0]->SetItemInfo(FText::FromString("AAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHH"));
-					UE_LOG(LogTemp, Warning, TEXT("BPHWidget Slot Item Name: %s"), *TempBPHWidget->GetSlotWidgets()[0]->GetItemName().ToString());
-
+					UE_LOG(LogTemp, Warning, TEXT("BPHWidget Slot Item Name: %s"), *TempBPHWidget->GetAllSlotWidgets()[0]->GetItemName().ToString());
+					//TempBPHWidget->GetSlotWidgets()[0]->SetItemInfo(FText::FromString("AAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHH"));
+					//TempBPHWidget = TempHorizontalWidget;
+					UE_LOG(LogTemp, Warning, TEXT("BPHWidget Slot Item Name: %s"), *TempBPHWidget->GetAllSlotWidgets()[0]->GetItemName().ToString());
+					VisibleHorizontalWidgets.push_back(TempBPHWidget);
 				}
+				
+				CurrHorizontalWidget = AllHorizontalWidgets.begin();
+
+				for (auto HWidget : VisibleHorizontalWidgets)
+				{
+					HWidget->SetAllSlotWidgets((*CurrHorizontalWidget)->GetAllSlotWidgets());
+					/*for (auto CurrSlot : HWidget->GetSlotWidgets())
+					{
+
+					}*/
+					UE_LOG(LogTemp, Warning, TEXT("HWidget Name: %s"), *HWidget->GetName());
+					UE_LOG(LogTemp, Warning, TEXT("HWidget Slot Item Name: %s"), *HWidget->GetAllSlotWidgets()[0]->GetItemName().ToString());
+					++CurrHorizontalWidget;
+				}
+
+				CurrHorizontalWidget = AllHorizontalWidgets.begin();
 				return true;
-			}
+			//}
 		}
 	}
 	return false;
@@ -65,10 +86,7 @@ void UInventoryWidget::Show()
 	UE_LOG(LogTemp, Warning, TEXT("In UInventoryWidget::Show()"));
 	AddToViewport();
 
-	for (UInventoryHorizontalWidget* HWidget : HorizontalWidgets)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("HWidget Slot Item Name"))
-	}
+	
 	//for (UIItem * Item : ItemsArray)
 	//{
 	//	if (Item != nullptr)

@@ -35,6 +35,10 @@ bool UInventorySlotWidget::Initialize()
 
 		bIsItemNameVisible = true;
 
+		ClipGrid = Cast <UUniformGridPanel>(WidgetTree->FindWidget("CurrentClip"));
+
+		ClipGrid->SetVisibility(ESlateVisibility::Hidden);
+
 		if (UIItemRef)
 		{
 			ItemTexture = UIItemRef->GetUIItemTexture();

@@ -6,6 +6,8 @@
 #include "UIItem.h"
 #include "InventorySlotWidget.h"
 #include "InventoryHorizontalWidget.h"
+#include <iostream>
+#include <vector>
 #include "InventoryWidget.generated.h"
 
 /**
@@ -37,23 +39,28 @@ protected:
 
 	/*Stores a reference in order to bind info on inventory slots*/
 
-	TArray<UInventoryHorizontalWidget *> HorizontalWidgets;
+	//TArray<UInventoryHorizontalWidget *> AllHorizontalWidgets;
 
-	UInventoryHorizontalWidget *TempHorizontalWidget;
+	std::vector<UInventoryHorizontalWidget *> AllHorizontalWidgets;
 
-	UInventoryHorizontalWidget *TempBPHWidget;
+	//TArray<UInventoryHorizontalWidget *> VisibleHorizontalWidgets;
+	std::vector<UInventoryHorizontalWidget *> VisibleHorizontalWidgets;
+
+	//UInventoryHorizontalWidget *TempHorizontalWidget;
+
+	//UInventoryHorizontalWidget *TempBPHWidget;
 
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<UInventoryHorizontalWidget> HorizontalWidgetBP;
 
-	UInventoryHorizontalWidget *CurrHorizontalWidget;
-
+	//TArray<UInventoryHorizontalWidget *>::TIterator CurrHorizontalWidget;
+	std::vector<UInventoryHorizontalWidget *>::iterator CurrHorizontalWidget;
 	//ptr to determine currently equipped item
-	UInventorySlotWidget *CurrentlyEquippedSlotWidget;
+	std::vector<UInventoryHorizontalWidget *>::iterator CurrentlyEquippedSlotWidget;
 
 	//ptr to determine the previously equipped item
-	UInventorySlotWidget *PrevEquippedSlotWidget;
+	std::vector<UInventoryHorizontalWidget *>::iterator PrevEquippedSlotWidget;
 
 	//ptr to determine currently SELECTED item when inventory menu is open
-	UInventorySlotWidget *CurrentlySelectedSlotWidget;
+	std::vector<UInventoryHorizontalWidget *>::iterator CurrentlySelectedSlotWidget;
 };
