@@ -17,6 +17,8 @@ bool UInventoryHorizontalWidget::Initialize()
 	Super::Initialize();
 	if (GetWorld())
 	{
+		bIsHorizontalWidgetInFocus = false;
+
 		if (IndicatorWidgetBP)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("IndicatorWidgetBP Set"));
@@ -47,12 +49,45 @@ bool UInventoryHorizontalWidget::Initialize()
 void UInventoryHorizontalWidget::Show()
 {
 
+	//TODO: streamline so that this can be applicable to all cases where slots haven't been unlocked yet instead of just NONE case
+	if (CheckIfContainsNone())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Horizontal Slot show none"));
+		ShowNone();
+	}
+
+	if (IsHorizontalWidgetInFocus())
+	{
+		//TODO: add highlight slot logic
+	}
 }
 
 void UInventoryHorizontalWidget::Hide()
 {
 
+	
+}
 
+void UInventoryHorizontalWidget::ShowNone()
+{
+
+	for (auto it = ++AllSlotWidgets.CreateIterator(); it; ++it)
+	{
+		(*it)->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
+bool UInventoryHorizontalWidget::CheckIfContainsNone()
+{
+	if (AllSlotWidgets.Num() > 0 )
+	{
+		if (AllSlotWidgets[0]->GetItemName().ToString() == "NONE")
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Horizontal Slot contains none"));
+			return true;
+		}
+	}
+	return false;
 }
 
 void UInventoryHorizontalWidget::SetAllSlotWidgets(TArray<UInventorySlotWidget*> NewArray)

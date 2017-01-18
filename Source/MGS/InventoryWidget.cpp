@@ -31,17 +31,17 @@ bool UInventoryWidget::Initialize()
 			{*/
 				for (int i = 0; i < MAX_VISIBLE_HORIZONTAL_SLOT_COUNT; i++)
 				{
-					UInventoryHorizontalWidget *TempHorizontalWidget = CreateWidget<UInventoryHorizontalWidget>(this->GetWorld(), HorizontalWidgetBP);
-					if (!TempHorizontalWidget)
-						return false;
 
 					if (i == 0)
 					{
+						UInventoryHorizontalWidget *TempHorizontalWidget = CreateWidget<UInventoryHorizontalWidget>(this->GetWorld(), HorizontalWidgetBP);
+						if (!TempHorizontalWidget)
+							return false;
 						TempHorizontalWidget->GetAllSlotWidgets()[0]->SetItemName(FText::FromString("NONE"));
-						
+						AllHorizontalWidgets.push_back(TempHorizontalWidget);
 					}
 
-					AllHorizontalWidgets.push_back(TempHorizontalWidget);
+					
 
 					UInventoryHorizontalWidget *TempBPHWidget = Cast<UInventoryHorizontalWidget>(WidgetTree->FindWidget(FName(*FString("UW_UIInventory_" + FString::FromInt(i)))));
 					
@@ -63,14 +63,14 @@ bool UInventoryWidget::Initialize()
 
 				for (auto HWidget : VisibleHorizontalWidgets)
 				{
-					HWidget->SetAllSlotWidgets((*CurrHorizontalWidget)->GetAllSlotWidgets());
-					/*for (auto CurrSlot : HWidget->GetSlotWidgets())
+					if (CurrHorizontalWidget < AllHorizontalWidgets.end())
 					{
-
-					}*/
+						HWidget->SetAllSlotWidgets((*CurrHorizontalWidget)->GetAllSlotWidgets());
+						++CurrHorizontalWidget;
+					}
 					UE_LOG(LogTemp, Warning, TEXT("HWidget Name: %s"), *HWidget->GetName());
 					UE_LOG(LogTemp, Warning, TEXT("HWidget Slot Item Name: %s"), *HWidget->GetAllSlotWidgets()[0]->GetItemName().ToString());
-					++CurrHorizontalWidget;
+					
 				}
 
 				CurrHorizontalWidget = AllHorizontalWidgets.begin();
@@ -86,6 +86,14 @@ void UInventoryWidget::Show()
 	UE_LOG(LogTemp, Warning, TEXT("In UInventoryWidget::Show()"));
 	AddToViewport();
 
+	for (auto HWidget : VisibleHorizontalWidgets)
+	{
+		if (HWidget->GetName() == "UW_UIInventory_0")
+		{
+			//TODO:Add highlight/focus logic
+		}
+		HWidget->Show();
+	}
 	
 	//for (UIItem * Item : ItemsArray)
 	//{

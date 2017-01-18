@@ -6,7 +6,8 @@
 UInventorySlotWidget::UInventorySlotWidget(const FObjectInitializer & ObjectInitializer)
 	:Super(ObjectInitializer)
 {
-	}
+
+}
 
 bool UInventorySlotWidget::Initialize()
 {

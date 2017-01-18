@@ -75,6 +75,8 @@ public:
 
 	virtual bool Initialize() override;
 
+	//TODO: Add function for highlight logic (apply highlight color to bkg image?)
+
 	UFUNCTION(BlueprintCallable, Category= UI)
 		FORCEINLINE UTexture2D *GetItemTexture() { return ItemTexture; }
 

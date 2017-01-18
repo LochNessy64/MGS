@@ -34,6 +34,8 @@ protected:
 
 	UInventorySlotWidget * HighlightedSlot;
 
+	bool bIsHorizontalWidgetInFocus;
+
 public:
 	UInventoryHorizontalWidget(const FObjectInitializer &ObjectInitializer);
 
@@ -44,6 +46,10 @@ public:
 	void Show();
 
 	void Hide();
+
+	void ShowNone();
+
+	bool CheckIfContainsNone();
 
 	FORCEINLINE UInventorySelectIndicatorWidget *GetIndicator() { return Indicator; }
 
@@ -56,5 +62,9 @@ public:
 	FORCEINLINE TArray<UInventorySlotWidget *> GetVisibleSlotWidgets() { return VisibleSlotWidgets; }
 
 	FORCEINLINE void SetVisibleSlotWidgets(TArray<UInventorySlotWidget *> NewArray) { VisibleSlotWidgets = NewArray; }
+
+	FORCEINLINE bool IsHorizontalWidgetInFocus() { return bIsHorizontalWidgetInFocus; }
+
+	FORCEINLINE void SetHorizontalWidgetFocus(bool NewState) { bIsHorizontalWidgetInFocus = NewState; }
 
 };
